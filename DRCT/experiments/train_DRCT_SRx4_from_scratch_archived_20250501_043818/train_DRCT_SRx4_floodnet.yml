@@ -1,11 +1,11 @@
-# GENERATE TIME: Thu May  1 04:38:18 2025
+# GENERATE TIME: Thu May  1 04:20:04 2025
 # CMD:
 # drct/train.py -opt options/train/train_DRCT_SRx4_floodnet.yml --launcher none
 
 # general settings
 name: train_DRCT_SRx4_from_scratch
 model_type: DRCTModel
-scale: 4
+scale: 1
 num_gpu: auto
 manual_seed: 0
 
@@ -27,7 +27,7 @@ datasets:
     # data loader
     use_shuffle: true
     num_worker_per_gpu: 6
-    batch_size_per_gpu: 1
+    batch_size_per_gpu: 4
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 

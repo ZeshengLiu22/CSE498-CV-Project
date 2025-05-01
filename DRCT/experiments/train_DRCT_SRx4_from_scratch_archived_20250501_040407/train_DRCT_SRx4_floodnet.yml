@@ -1,4 +1,4 @@
-# GENERATE TIME: Thu May  1 04:38:18 2025
+# GENERATE TIME: Thu May  1 00:44:26 2025
 # CMD:
 # drct/train.py -opt options/train/train_DRCT_SRx4_floodnet.yml --launcher none
 
@@ -14,28 +14,28 @@ datasets:
   train:
     name: FloodNet
     type: PairedImageDataset
-    dataroot_gt: datasets/uploads/LR_dataset_1024/FloodNet/HR/train-org-img
-    dataroot_lq: datasets/uploads/LR_dataset_1024/FloodNet/LR/train-org-img
+    dataroot_gt: datasets/uploads/LR_dataset_512/FloodNet/HR/train-org-img
+    dataroot_lq: datasets/uploads/LR_dataset_512/FloodNet/LR/train-org-img
     #meta_info_file: drct/data/meta_info/meta_info_DF2Ksub_GT.txt
     io_backend:
       type: disk
 
-    gt_size: 1024
+    gt_size: 512
     use_hflip: true
     use_rot: true
 
     # data loader
     use_shuffle: true
     num_worker_per_gpu: 6
-    batch_size_per_gpu: 1
+    batch_size_per_gpu: 4
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
   val_1:
     name: FloodNet
     type: PairedImageDataset
-    dataroot_gt: datasets/uploads/LR_dataset_1024_val/FloodNet/HR/train-org-img
-    dataroot_lq: datasets/uploads/LR_dataset_1024_val/FloodNet/LR/train-org-img
+    dataroot_gt: datasets/uploads/LR_dataset_512_val/FloodNet/HR/train-org-img
+    dataroot_lq: datasets/uploads/LR_dataset_512_val/FloodNet/LR/train-org-img
     io_backend:
       type: disk
 
@@ -62,7 +62,7 @@ network_g:
   type: DRCT
   upscale: 4
   in_chans: 3
-  img_size: 256
+  img_size: 128
   window_size: 16
   compress_ratio: 3
   squeeze_factor: 30

@@ -10,28 +10,28 @@ datasets:
   train:
     name: FloodNet
     type: PairedImageDataset
-    dataroot_gt: datasets/uploads/LR_dataset_512/FloodNet/HR/train-org-img
-    dataroot_lq: datasets/uploads/LR_dataset_512/FloodNet/LR/train-org-img
+    dataroot_gt: datasets/uploads/LR_dataset_1024/FloodNet/HR/train-org-img
+    dataroot_lq: datasets/uploads/LR_dataset_1024/FloodNet/LR/train-org-img
     #meta_info_file: drct/data/meta_info/meta_info_DF2Ksub_GT.txt
     io_backend:
       type: disk
 
-    gt_size: 512
+    gt_size: 1024
     use_hflip: true
     use_rot: true
 
     # data loader
     use_shuffle: true
     num_worker_per_gpu: 6
-    batch_size_per_gpu: 4
+    batch_size_per_gpu: 1
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
   val_1:
     name: FloodNet
     type: PairedImageDataset
-    dataroot_gt: datasets/uploads/LR_dataset_512_val/FloodNet/HR/train-org-img
-    dataroot_lq: datasets/uploads/LR_dataset_512_val/FloodNet/LR/train-org-img
+    dataroot_gt: datasets/uploads/LR_dataset_1024_val/FloodNet/HR/train-org-img
+    dataroot_lq: datasets/uploads/LR_dataset_1024_val/FloodNet/LR/train-org-img
     io_backend:
       type: disk
 
@@ -58,7 +58,7 @@ network_g:
   type: DRCT
   upscale: 4
   in_chans: 3
-  img_size: 128
+  img_size: 256
   window_size: 16
   compress_ratio: 3
   squeeze_factor: 30
@@ -122,8 +122,8 @@ val:
 # logging settings
 logger:
   print_freq: 100
-  save_checkpoint_freq: !!float 5e3
-  use_tb_logger: true
+  save_checkpoint_freq: !!float 5e2
+  use_tb_logger: false
   wandb:
     project: ~
     resume_id: ~
