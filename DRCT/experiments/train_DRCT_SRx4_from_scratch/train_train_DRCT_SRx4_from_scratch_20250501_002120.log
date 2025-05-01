@@ -1,4 +1,4 @@
-2025-04-30 00:55:09,976 INFO: 
+2025-05-01 00:21:20,161 INFO: 
                 ____                _       _____  ____
                / __ ) ____ _ _____ (_)_____/ ___/ / __ \
               / __  |/ __ `// ___// // ___/\__ \ / /_/ /
@@ -14,7 +14,7 @@ Version Information:
 	BasicSR: 1.3.4.9
 	PyTorch: 1.12.1
 	TorchVision: 0.13.1
-2025-04-30 00:55:09,976 INFO: 
+2025-05-01 00:21:20,161 INFO: 
   name: train_DRCT_SRx4_from_scratch
   model_type: DRCTModel
   scale: 4
@@ -34,7 +34,7 @@ Version Information:
       use_rot: True
       use_shuffle: True
       num_worker_per_gpu: 6
-      batch_size_per_gpu: 1
+      batch_size_per_gpu: 4
       dataset_enlarge_ratio: 1
       prefetch_mode: None
       phase: train
@@ -43,8 +43,8 @@ Version Information:
     val_1:[
       name: FloodNet
       type: PairedImageDataset
-      dataroot_gt: datasets/uploads/LR_dataset_512/FloodNet/HR/train-org-img
-      dataroot_lq: datasets/uploads/LR_dataset_512/FloodNet/LR/train-org-img
+      dataroot_gt: datasets/uploads/LR_dataset_512_val/FloodNet/HR/train-org-img
+      dataroot_lq: datasets/uploads/LR_dataset_512_val/FloodNet/LR/train-org-img
       io_backend:[
         type: disk
       ]
@@ -90,10 +90,10 @@ Version Information:
     ]
     scheduler:[
       type: MultiStepLR
-      milestones: [250000, 400000, 450000, 475000]
+      milestones: [5000, 8000, 9000, 9500]
       gamma: 0.5
     ]
-    total_iter: 500000
+    total_iter: 10000
     warmup_iter: -1
     pixel_opt:[
       type: L1Loss
@@ -102,7 +102,7 @@ Version Information:
     ]
   ]
   val:[
-    val_freq: 100.0
+    val_freq: 500.0
     save_img: False
     pbar: False
     metrics:[
@@ -140,19 +140,19 @@ Version Information:
   is_train: True
   root_path: /teamspace/studios/this_studio/CSE498-CV-Project/DRCT
 
-2025-04-30 00:55:10,420 INFO: Dataset [PairedImageDataset] - FloodNet is built.
-2025-04-30 00:55:10,421 INFO: Training statistics:
+2025-05-01 00:21:21,191 INFO: Dataset [PairedImageDataset] - FloodNet is built.
+2025-05-01 00:21:21,192 INFO: Training statistics:
 	Number of train images: 398
 	Dataset enlarge ratio: 1
-	Batch size per gpu: 1
+	Batch size per gpu: 4
 	World size (gpu number): 1
-	Require iter number per epoch: 398
-	Total epochs: 1257; iters: 500000.
-2025-04-30 00:55:10,447 INFO: Dataset [PairedImageDataset] - FloodNet is built.
-2025-04-30 00:55:10,447 INFO: Number of val images/folders in FloodNet: 398
-2025-04-30 00:55:11,006 INFO: Network [DRCT] is created.
-2025-04-30 00:55:13,138 INFO: Network: DRCT, with parameters: 14,139,579
-2025-04-30 00:55:13,139 INFO: DRCT(
+	Require iter number per epoch: 100
+	Total epochs: 100; iters: 10000.
+2025-05-01 00:21:21,692 INFO: Dataset [PairedImageDataset] - FloodNet is built.
+2025-05-01 00:21:21,693 INFO: Number of val images/folders in FloodNet: 400
+2025-05-01 00:21:21,955 INFO: Network [DRCT] is created.
+2025-05-01 00:21:22,940 INFO: Network: DRCT, with parameters: 14,139,579
+2025-05-01 00:21:22,940 INFO: DRCT(
   (conv_first): Conv2d(3, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
   (patch_embed): PatchEmbed(
     (norm): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
@@ -835,53 +835,8 @@ Version Information:
   )
   (conv_last): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
 )
-2025-04-30 00:55:13,142 INFO: Use Exponential Moving Average with decay: 0.999
-2025-04-30 00:55:13,526 INFO: Network [DRCT] is created.
-2025-04-30 00:55:13,641 INFO: Loss [L1Loss] is created.
-2025-04-30 00:55:13,643 INFO: Model [DRCTModel] is created.
-2025-04-30 00:55:13,820 INFO: Start training from epoch: 0, iter: 0
-2025-04-30 00:55:46,999 INFO: [train..][epoch:  0, iter:     100, lr:(2.000e-04,)] [eta: 1 day, 13:14:08, time (data): 0.332 (0.005)] l_pix: 6.1481e-02 
-2025-04-30 00:57:49,279 INFO: Validation FloodNet
-	 # psnr: 17.6495	Best: 17.6495 @ 100 iter
-	 # ssim: 0.3618	Best: 0.3618 @ 100 iter
-
-2025-04-30 00:58:16,682 INFO: [train..][epoch:  0, iter:     200, lr:(2.000e-04,)] [eta: 5 days, 2:05:42, time (data): 0.303 (0.004)] l_pix: 7.0352e-02 
-2025-04-30 00:59:23,317 INFO: Validation FloodNet
-	 # psnr: 18.1024	Best: 18.1024 @ 200 iter
-	 # ssim: 0.3998	Best: 0.3998 @ 200 iter
-
-2025-04-30 00:59:50,731 INFO: [train..][epoch:  0, iter:     300, lr:(2.000e-04,)] [eta: 5 days, 4:53:09, time (data): 0.274 (0.002)] l_pix: 6.5826e-02 
-2025-04-30 01:00:57,580 INFO: Validation FloodNet
-	 # psnr: 18.5638	Best: 18.5638 @ 300 iter
-	 # ssim: 0.4289	Best: 0.4289 @ 300 iter
-
-2025-04-30 01:01:25,313 INFO: [train..][epoch:  1, iter:     400, lr:(2.000e-04,)] [eta: 5 days, 6:27:21, time (data): 0.276 (0.004)] l_pix: 6.7457e-02 
-2025-04-30 01:02:32,174 INFO: Validation FloodNet
-	 # psnr: 19.0020	Best: 19.0020 @ 400 iter
-	 # ssim: 0.4493	Best: 0.4493 @ 400 iter
-
-2025-04-30 01:02:59,521 INFO: [train..][epoch:  1, iter:     500, lr:(2.000e-04,)] [eta: 5 days, 7:17:09, time (data): 0.273 (0.002)] l_pix: 3.8197e-02 
-2025-04-30 01:04:06,536 INFO: Validation FloodNet
-	 # psnr: 19.4420	Best: 19.4420 @ 500 iter
-	 # ssim: 0.4659	Best: 0.4659 @ 500 iter
-
-2025-04-30 01:04:33,929 INFO: [train..][epoch:  1, iter:     600, lr:(2.000e-04,)] [eta: 5 days, 7:52:36, time (data): 0.274 (0.002)] l_pix: 6.3616e-02 
-2025-04-30 01:05:41,580 INFO: Validation FloodNet
-	 # psnr: 19.8527	Best: 19.8527 @ 600 iter
-	 # ssim: 0.4789	Best: 0.4789 @ 600 iter
-
-2025-04-30 01:06:08,949 INFO: [train..][epoch:  1, iter:     700, lr:(2.000e-04,)] [eta: 5 days, 8:24:45, time (data): 0.274 (0.002)] l_pix: 1.1478e-01 
-2025-04-30 01:07:18,832 INFO: Validation FloodNet
-	 # psnr: 20.1933	Best: 20.1933 @ 700 iter
-	 # ssim: 0.4909	Best: 0.4909 @ 700 iter
-
-2025-04-30 01:07:46,727 INFO: [train..][epoch:  2, iter:     800, lr:(2.000e-04,)] [eta: 5 days, 9:17:07, time (data): 0.276 (0.004)] l_pix: 7.5037e-02 
-2025-04-30 01:08:58,648 INFO: Validation FloodNet
-	 # psnr: 20.5060	Best: 20.5060 @ 800 iter
-	 # ssim: 0.5014	Best: 0.5014 @ 800 iter
-
-2025-04-30 01:09:26,180 INFO: [train..][epoch:  2, iter:     900, lr:(2.000e-04,)] [eta: 5 days, 10:12:59, time (data): 0.275 (0.002)] l_pix: 4.8749e-02 
-2025-04-30 01:10:37,091 INFO: Validation FloodNet
-	 # psnr: 20.8429	Best: 20.8429 @ 900 iter
-	 # ssim: 0.5121	Best: 0.5121 @ 900 iter
-
+2025-05-01 00:21:22,942 INFO: Use Exponential Moving Average with decay: 0.999
+2025-05-01 00:21:23,156 INFO: Network [DRCT] is created.
+2025-05-01 00:21:23,222 INFO: Loss [L1Loss] is created.
+2025-05-01 00:21:23,223 INFO: Model [DRCTModel] is created.
+2025-05-01 00:21:23,394 INFO: Start training from epoch: 0, iter: 0
