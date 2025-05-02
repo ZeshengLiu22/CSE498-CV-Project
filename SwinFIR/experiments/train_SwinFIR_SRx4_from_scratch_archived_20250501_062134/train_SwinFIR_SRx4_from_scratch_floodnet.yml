@@ -1,4 +1,4 @@
-# GENERATE TIME: Thu May  1 06:22:35 2025
+# GENERATE TIME: Thu May  1 05:51:21 2025
 # CMD:
 # swinfir/train.py -opt options/train/SwinFIR/train_SwinFIR_SRx4_from_scratch_floodnet.yml --launcher none
 
