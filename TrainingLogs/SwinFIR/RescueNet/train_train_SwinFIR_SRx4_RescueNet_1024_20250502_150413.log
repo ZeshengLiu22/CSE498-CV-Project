@@ -1,0 +1,686 @@
+2025-05-02 15:04:13,332 INFO: 
+                ____                _       _____  ____
+               / __ ) ____ _ _____ (_)_____/ ___/ / __ \
+              / __  |/ __ `// ___// // ___/\__ \ / /_/ /
+             / /_/ // /_/ /(__  )/ // /__ ___/ // _, _/
+            /_____/ \__,_//____//_/ \___//____//_/ |_|
+     ______                   __   __                 __      __
+    / ____/____   ____   ____/ /  / /   __  __ _____ / /__   / /
+   / / __ / __ \ / __ \ / __  /  / /   / / / // ___// //_/  / /
+  / /_/ // /_/ // /_/ // /_/ /  / /___/ /_/ // /__ / /<    /_/
+  \____/ \____/ \____/ \____/  /_____/\____/ \___//_/|_|  (_)
+    
+Version Information: 
+	BasicSR: 1.3.5
+	PyTorch: 2.7.0+cu128
+	TorchVision: 0.22.0+cu128
+2025-05-02 15:04:13,332 INFO: 
+  name: train_SwinFIR_SRx4_RescueNet_1024
+  model_type: SwinFIRModel
+  scale: 4
+  num_gpu: 1
+  manual_seed: 0
+  datasets:[
+    train:[
+      name: RescueNet-train
+      type: PairedImageDADataset
+      dataroot_gt: datasets/uploads/New_LR_dataset_1024_train/RescueNet/HR/train-org-img
+      dataroot_lq: datasets/uploads/New_LR_dataset_1024_train/RescueNet/LR/train-org-img
+      io_backend:[
+        type: disk
+      ]
+      gt_size: 1024
+      use_hflip: True
+      use_rot: True
+      use_mixup: True
+      use_channelshuffle: True
+      use_shuffle: True
+      num_worker_per_gpu: 6
+      batch_size_per_gpu: 1
+      dataset_enlarge_ratio: 1
+      prefetch_mode: None
+      phase: train
+      scale: 4
+    ]
+    val_1:[
+      name: RescueNet-val
+      type: PairedImageDataset
+      dataroot_gt: datasets/uploads/New_LR_dataset_1024_val/RescueNet/HR/train-org-img
+      dataroot_lq: datasets/uploads/New_LR_dataset_1024_val/RescueNet/LR/train-org-img
+      io_backend:[
+        type: disk
+      ]
+      phase: val
+      scale: 4
+    ]
+  ]
+  network_g:[
+    type: SwinFIR
+    upscale: 4
+    in_chans: 3
+    img_size: 256
+    window_size: 16
+    img_range: 1.0
+    depths: [6, 6, 6, 6, 6, 6]
+    embed_dim: 180
+    num_heads: [6, 6, 6, 6, 6, 6]
+    mlp_ratio: 2
+    upsampler: pixelshuffle
+    resi_connection: SFB
+  ]
+  path:[
+    pretrain_network_g: None
+    strict_load_g: True
+    resume_state: None
+    experiments_root: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_RescueNet_1024
+    models: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_RescueNet_1024/models
+    training_states: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_RescueNet_1024/training_states
+    log: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_RescueNet_1024
+    visualization: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_RescueNet_1024/visualization
+  ]
+  train:[
+    ema_decay: 0.999
+    optim_g:[
+      type: Adam
+      lr: 0.0002
+      weight_decay: 0
+      betas: [0.9, 0.99]
+    ]
+    scheduler:[
+      type: MultiStepLR
+      milestones: [5000, 8000, 9000, 9500]
+      gamma: 0.5
+    ]
+    total_iter: 10000
+    warmup_iter: -1
+    pixel_opt:[
+      type: CharbonnierLossColor
+      loss_weight: 1.0
+      reduction: mean
+    ]
+  ]
+  val:[
+    val_freq: 500.0
+    save_img: False
+    pbar: False
+    metrics:[
+      psnr:[
+        type: calculate_psnr
+        crop_border: 3
+        test_y_channel: True
+        better: higher
+      ]
+      ssim:[
+        type: calculate_ssim
+        crop_border: 3
+        test_y_channel: True
+        better: higher
+      ]
+    ]
+  ]
+  logger:[
+    print_freq: 100
+    save_checkpoint_freq: 500.0
+    use_tb_logger: False
+    wandb:[
+      project: None
+      resume_id: None
+    ]
+  ]
+  dist_params:[
+    backend: nccl
+    port: 29500
+  ]
+  dist: False
+  rank: 0
+  world_size: 1
+  auto_resume: False
+  is_train: True
+  root_path: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR
+
+2025-05-02 15:04:13,604 INFO: Dataset [PairedImageDADataset] - RescueNet-train is built.
+2025-05-02 15:04:13,604 INFO: Training statistics:
+	Number of train images: 400
+	Dataset enlarge ratio: 1
+	Batch size per gpu: 1
+	World size (gpu number): 1
+	Require iter number per epoch: 400
+	Total epochs: 25; iters: 10000.
+2025-05-02 15:04:13,756 INFO: Dataset [PairedImageDataset] - RescueNet-val is built.
+2025-05-02 15:04:13,756 INFO: Number of val images/folders in RescueNet-val: 200
+2025-05-02 15:04:14,548 INFO: Network [SwinFIR] is created.
+2025-05-02 15:04:14,905 INFO: Network: SwinFIR, with parameters: 14,591,235
+2025-05-02 15:04:14,905 INFO: SwinFIR(
+  (conv_first): Conv2d(3, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (patch_embed): PatchEmbed(
+    (norm): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+  )
+  (patch_unembed): PatchUnEmbed()
+  (pos_drop): Dropout(p=0.0, inplace=False)
+  (layers): ModuleList(
+    (0): RSTB(
+      (residual_group): BasicLayer(
+        dim=180, input_resolution=(256, 256), depth=6
+        (blocks): ModuleList(
+          (0): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): Identity()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (1): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (2): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (3): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (4): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (5): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+      )
+      (conv): SFB(
+        (S): ResB(
+          (body): Sequential(
+            (0): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (1): LeakyReLU(negative_slope=0.2, inplace=True)
+            (2): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+        (F): SpectralTransform(
+          (conv1): Sequential(
+            (0): Conv2d(180, 90, kernel_size=(1, 1), stride=(1, 1))
+            (1): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (fu): FourierUnit(
+            (conv_layer): Conv2d(180, 180, kernel_size=(1, 1), stride=(1, 1))
+            (relu): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (conv2): Conv2d(90, 180, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (fusion): Conv2d(360, 180, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (patch_embed): PatchEmbed()
+      (patch_unembed): PatchUnEmbed()
+    )
+    (1-5): 5 x RSTB(
+      (residual_group): BasicLayer(
+        dim=180, input_resolution=(256, 256), depth=6
+        (blocks): ModuleList(
+          (0): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (1): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (2): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (3): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (4): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (5): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+      )
+      (conv): SFB(
+        (S): ResB(
+          (body): Sequential(
+            (0): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (1): LeakyReLU(negative_slope=0.2, inplace=True)
+            (2): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+        (F): SpectralTransform(
+          (conv1): Sequential(
+            (0): Conv2d(180, 90, kernel_size=(1, 1), stride=(1, 1))
+            (1): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (fu): FourierUnit(
+            (conv_layer): Conv2d(180, 180, kernel_size=(1, 1), stride=(1, 1))
+            (relu): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (conv2): Conv2d(90, 180, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (fusion): Conv2d(360, 180, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (patch_embed): PatchEmbed()
+      (patch_unembed): PatchUnEmbed()
+    )
+  )
+  (norm): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+  (conv_after_body): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv_before_upsample): Sequential(
+    (0): Conv2d(180, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): LeakyReLU(negative_slope=0.01, inplace=True)
+  )
+  (upsample): Upsample(
+    (0): Conv2d(64, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): PixelShuffle(upscale_factor=2)
+    (2): Conv2d(64, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (3): PixelShuffle(upscale_factor=2)
+  )
+  (conv_last): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+)
+2025-05-02 15:04:14,907 INFO: Use Exponential Moving Average with decay: 0.999
+2025-05-02 15:04:15,673 INFO: Network [SwinFIR] is created.
+2025-05-02 15:04:15,919 INFO: Loss [CharbonnierLossColor] is created.
+2025-05-02 15:04:15,921 INFO: Model [SwinFIRModel] is created.
+2025-05-02 15:04:16,003 INFO: Start training from epoch: 0, iter: 0
+2025-05-02 15:05:57,142 INFO: [train..][epoch:  0, iter:     100, lr:(2.000e-04,)] [eta: 2:37:49, time (data): 1.011 (0.009)] l_pix: 1.2525e-01 
+2025-05-02 15:07:35,224 INFO: [train..][epoch:  0, iter:     200, lr:(2.000e-04,)] [eta: 2:38:12, time (data): 0.996 (0.007)] l_pix: 5.1114e-02 
+2025-05-02 15:09:13,678 INFO: [train..][epoch:  0, iter:     300, lr:(2.000e-04,)] [eta: 2:37:26, time (data): 0.985 (0.004)] l_pix: 5.7023e-02 
+2025-05-02 15:10:52,109 INFO: [train..][epoch:  0, iter:     400, lr:(2.000e-04,)] [eta: 2:36:13, time (data): 0.984 (0.005)] l_pix: 6.9234e-02 
+2025-05-02 15:12:31,300 INFO: [train..][epoch:  1, iter:     500, lr:(2.000e-04,)] [eta: 2:35:05, time (data): 0.987 (0.005)] l_pix: 8.6222e-02 
+2025-05-02 15:12:31,301 INFO: Saving models and training states.
+2025-05-02 15:19:38,804 INFO: Validation RescueNet-val
+	 # psnr: 13.9782	Best: 13.9782 @ 500 iter
+	 # ssim: 0.3693	Best: 0.3693 @ 500 iter
+
+2025-05-02 15:21:16,699 INFO: [train..][epoch:  1, iter:     600, lr:(2.000e-04,)] [eta: 4:24:51, time (data): 0.983 (0.005)] l_pix: 7.1923e-02 
+2025-05-02 15:22:54,926 INFO: [train..][epoch:  1, iter:     700, lr:(2.000e-04,)] [eta: 4:06:22, time (data): 0.982 (0.005)] l_pix: 5.1450e-02 
+2025-05-02 15:24:33,045 INFO: [train..][epoch:  1, iter:     800, lr:(2.000e-04,)] [eta: 3:52:05, time (data): 0.982 (0.005)] l_pix: 5.5595e-02 
+2025-05-02 15:26:12,215 INFO: [train..][epoch:  2, iter:     900, lr:(2.000e-04,)] [eta: 3:40:46, time (data): 0.986 (0.004)] l_pix: 1.2610e-01 
+2025-05-02 15:27:50,739 INFO: [train..][epoch:  2, iter:   1,000, lr:(2.000e-04,)] [eta: 3:31:17, time (data): 0.986 (0.004)] l_pix: 5.3813e-02 
+2025-05-02 15:27:50,739 INFO: Saving models and training states.
+2025-05-02 15:34:25,482 INFO: Validation RescueNet-val
+	 # psnr: 16.4280	Best: 16.4280 @ 1000 iter
+	 # ssim: 0.5155	Best: 0.5155 @ 1000 iter
+
+2025-05-02 15:36:03,328 INFO: [train..][epoch:  2, iter:   1,100, lr:(2.000e-04,)] [eta: 4:16:19, time (data): 0.979 (0.005)] l_pix: 3.8009e-02 
+2025-05-02 15:37:41,577 INFO: [train..][epoch:  2, iter:   1,200, lr:(2.000e-04,)] [eta: 4:04:20, time (data): 0.981 (0.005)] l_pix: 3.9905e-02 
+2025-05-02 15:39:20,405 INFO: [train..][epoch:  3, iter:   1,300, lr:(2.000e-04,)] [eta: 3:54:00, time (data): 0.981 (0.005)] l_pix: 3.8529e-02 
+2025-05-02 15:40:58,769 INFO: [train..][epoch:  3, iter:   1,400, lr:(2.000e-04,)] [eta: 3:44:52, time (data): 0.982 (0.005)] l_pix: 8.8063e-02 
+2025-05-02 15:42:37,209 INFO: [train..][epoch:  3, iter:   1,500, lr:(2.000e-04,)] [eta: 3:36:44, time (data): 0.985 (0.005)] l_pix: 8.0626e-02 
+2025-05-02 15:42:37,210 INFO: Saving models and training states.
+2025-05-02 15:49:06,053 INFO: Validation RescueNet-val
+	 # psnr: 18.6834	Best: 18.6834 @ 1500 iter
+	 # ssim: 0.6088	Best: 0.6088 @ 1500 iter
+
+2025-05-02 15:50:44,021 INFO: [train..][epoch:  3, iter:   1,600, lr:(2.000e-04,)] [eta: 4:03:22, time (data): 0.982 (0.005)] l_pix: 8.5725e-02 
+2025-05-02 15:52:23,031 INFO: [train..][epoch:  4, iter:   1,700, lr:(2.000e-04,)] [eta: 3:54:23, time (data): 0.983 (0.005)] l_pix: 6.4690e-02 
+2025-05-02 15:54:01,527 INFO: [train..][epoch:  4, iter:   1,800, lr:(2.000e-04,)] [eta: 3:46:10, time (data): 0.984 (0.005)] l_pix: 6.3680e-02 
+2025-05-02 15:55:40,201 INFO: [train..][epoch:  4, iter:   1,900, lr:(2.000e-04,)] [eta: 3:38:40, time (data): 0.987 (0.005)] l_pix: 3.6787e-02 
+2025-05-02 15:57:18,807 INFO: [train..][epoch:  4, iter:   2,000, lr:(2.000e-04,)] [eta: 3:31:45, time (data): 0.986 (0.005)] l_pix: 2.2942e-02 
+2025-05-02 15:57:18,807 INFO: Saving models and training states.
+2025-05-02 16:03:55,644 INFO: Validation RescueNet-val
+	 # psnr: 20.5858	Best: 20.5858 @ 2000 iter
+	 # ssim: 0.6602	Best: 0.6602 @ 2000 iter
+
+2025-05-02 16:05:34,281 INFO: [train..][epoch:  5, iter:   2,100, lr:(2.000e-04,)] [eta: 3:50:12, time (data): 0.978 (0.005)] l_pix: 5.6915e-02 
+2025-05-02 16:07:12,571 INFO: [train..][epoch:  5, iter:   2,200, lr:(2.000e-04,)] [eta: 3:42:45, time (data): 0.980 (0.005)] l_pix: 5.2395e-02 
+2025-05-02 16:08:50,850 INFO: [train..][epoch:  5, iter:   2,300, lr:(2.000e-04,)] [eta: 3:35:49, time (data): 0.983 (0.004)] l_pix: 2.8775e-02 
+2025-05-02 16:10:29,466 INFO: [train..][epoch:  5, iter:   2,400, lr:(2.000e-04,)] [eta: 3:29:21, time (data): 0.985 (0.005)] l_pix: 7.0887e-02 
+2025-05-02 16:12:08,591 INFO: [train..][epoch:  6, iter:   2,500, lr:(2.000e-04,)] [eta: 3:23:17, time (data): 0.985 (0.005)] l_pix: 4.9090e-02 
+2025-05-02 16:12:08,591 INFO: Saving models and training states.
+2025-05-02 16:18:44,376 INFO: Validation RescueNet-val
+	 # psnr: 22.1304	Best: 22.1304 @ 2500 iter
+	 # ssim: 0.6851	Best: 0.6851 @ 2500 iter
+
+2025-05-02 16:20:22,309 INFO: [train..][epoch:  6, iter:   2,600, lr:(2.000e-04,)] [eta: 3:36:16, time (data): 0.982 (0.005)] l_pix: 6.1436e-02 
+2025-05-02 16:22:00,714 INFO: [train..][epoch:  6, iter:   2,700, lr:(2.000e-04,)] [eta: 3:29:53, time (data): 0.984 (0.005)] l_pix: 4.3762e-02 
+2025-05-02 16:23:39,138 INFO: [train..][epoch:  6, iter:   2,800, lr:(2.000e-04,)] [eta: 3:23:50, time (data): 0.984 (0.005)] l_pix: 3.8756e-02 
+2025-05-02 16:25:18,464 INFO: [train..][epoch:  7, iter:   2,900, lr:(2.000e-04,)] [eta: 3:18:07, time (data): 0.986 (0.005)] l_pix: 2.2181e-02 
+2025-05-02 16:26:56,941 INFO: [train..][epoch:  7, iter:   3,000, lr:(2.000e-04,)] [eta: 3:12:39, time (data): 0.985 (0.005)] l_pix: 6.1490e-02 
+2025-05-02 16:26:56,942 INFO: Saving models and training states.
+2025-05-02 16:33:30,322 INFO: Validation RescueNet-val
+	 # psnr: 23.3781	Best: 23.3781 @ 3000 iter
+	 # ssim: 0.7003	Best: 0.7003 @ 3000 iter
+
+2025-05-02 16:35:08,347 INFO: [train..][epoch:  7, iter:   3,100, lr:(2.000e-04,)] [eta: 3:22:00, time (data): 0.981 (0.005)] l_pix: 2.8584e-02 
+2025-05-02 16:36:46,701 INFO: [train..][epoch:  7, iter:   3,200, lr:(2.000e-04,)] [eta: 3:16:20, time (data): 0.982 (0.005)] l_pix: 8.7453e-02 
+2025-05-02 16:38:26,035 INFO: [train..][epoch:  8, iter:   3,300, lr:(2.000e-04,)] [eta: 3:10:56, time (data): 0.986 (0.005)] l_pix: 9.0760e-02 
+2025-05-02 16:40:04,633 INFO: [train..][epoch:  8, iter:   3,400, lr:(2.000e-04,)] [eta: 3:05:45, time (data): 0.986 (0.005)] l_pix: 7.6627e-02 
+2025-05-02 16:41:43,201 INFO: [train..][epoch:  8, iter:   3,500, lr:(2.000e-04,)] [eta: 3:00:45, time (data): 0.985 (0.005)] l_pix: 5.2900e-02 
+2025-05-02 16:41:43,201 INFO: Saving models and training states.
+2025-05-02 16:48:18,162 INFO: Validation RescueNet-val
+	 # psnr: 24.3563	Best: 24.3563 @ 3500 iter
+	 # ssim: 0.7084	Best: 0.7084 @ 3500 iter
+
+2025-05-02 16:49:56,154 INFO: [train..][epoch:  8, iter:   3,600, lr:(2.000e-04,)] [eta: 3:07:38, time (data): 0.982 (0.005)] l_pix: 2.8928e-02 
+2025-05-02 16:51:35,310 INFO: [train..][epoch:  9, iter:   3,700, lr:(2.000e-04,)] [eta: 3:02:31, time (data): 0.985 (0.005)] l_pix: 7.5095e-02 
+2025-05-02 16:53:13,893 INFO: [train..][epoch:  9, iter:   3,800, lr:(2.000e-04,)] [eta: 2:57:35, time (data): 0.985 (0.004)] l_pix: 6.9998e-02 
+2025-05-02 16:54:52,419 INFO: [train..][epoch:  9, iter:   3,900, lr:(2.000e-04,)] [eta: 2:52:48, time (data): 0.986 (0.004)] l_pix: 6.1677e-02 
+2025-05-02 16:56:31,017 INFO: [train..][epoch:  9, iter:   4,000, lr:(2.000e-04,)] [eta: 2:48:11, time (data): 0.986 (0.005)] l_pix: 5.3435e-02 
+2025-05-02 16:56:31,018 INFO: Saving models and training states.
+2025-05-02 17:03:06,301 INFO: Validation RescueNet-val
+	 # psnr: 25.1731	Best: 25.1731 @ 4000 iter
+	 # ssim: 0.7127	Best: 0.7127 @ 4000 iter
+
+2025-05-02 17:04:45,125 INFO: [train..][epoch: 10, iter:   4,100, lr:(2.000e-04,)] [eta: 2:53:12, time (data): 0.980 (0.005)] l_pix: 2.5795e-02 
+2025-05-02 17:06:23,503 INFO: [train..][epoch: 10, iter:   4,200, lr:(2.000e-04,)] [eta: 2:48:28, time (data): 0.982 (0.005)] l_pix: 4.5837e-02 
+2025-05-02 17:08:01,994 INFO: [train..][epoch: 10, iter:   4,300, lr:(2.000e-04,)] [eta: 2:43:53, time (data): 0.984 (0.005)] l_pix: 1.4256e-02 
+2025-05-02 17:09:40,664 INFO: [train..][epoch: 10, iter:   4,400, lr:(2.000e-04,)] [eta: 2:39:27, time (data): 0.986 (0.005)] l_pix: 2.4237e-02 
+2025-05-02 17:11:20,050 INFO: [train..][epoch: 11, iter:   4,500, lr:(2.000e-04,)] [eta: 2:35:08, time (data): 0.985 (0.005)] l_pix: 1.5430e-02 
+2025-05-02 17:11:20,050 INFO: Saving models and training states.
+2025-05-02 17:17:55,597 INFO: Validation RescueNet-val
+	 # psnr: 25.8216	Best: 25.8216 @ 4500 iter
+	 # ssim: 0.7162	Best: 0.7162 @ 4500 iter
+
+2025-05-02 17:19:33,624 INFO: [train..][epoch: 11, iter:   4,600, lr:(2.000e-04,)] [eta: 2:38:40, time (data): 0.982 (0.005)] l_pix: 7.7179e-02 
+2025-05-02 17:21:11,610 INFO: [train..][epoch: 11, iter:   4,700, lr:(2.000e-04,)] [eta: 2:34:15, time (data): 0.980 (0.005)] l_pix: 2.7934e-02 
+2025-05-02 17:22:50,018 INFO: [train..][epoch: 11, iter:   4,800, lr:(2.000e-04,)] [eta: 2:29:58, time (data): 0.982 (0.005)] l_pix: 5.9427e-02 
+2025-05-02 17:24:28,923 INFO: [train..][epoch: 12, iter:   4,900, lr:(2.000e-04,)] [eta: 2:25:48, time (data): 0.983 (0.005)] l_pix: 4.3280e-02 
+2025-05-02 17:26:07,500 INFO: [train..][epoch: 12, iter:   5,000, lr:(2.000e-04,)] [eta: 2:21:43, time (data): 0.985 (0.005)] l_pix: 8.7966e-02 
+2025-05-02 17:26:07,500 INFO: Saving models and training states.
+2025-05-02 17:32:44,460 INFO: Validation RescueNet-val
+	 # psnr: 26.3114	Best: 26.3114 @ 5000 iter
+	 # ssim: 0.7185	Best: 0.7185 @ 5000 iter
+
+2025-05-02 17:34:22,445 INFO: [train..][epoch: 12, iter:   5,100, lr:(1.000e-04,)] [eta: 2:24:05, time (data): 0.981 (0.005)] l_pix: 2.1055e-02 
+2025-05-02 17:36:00,684 INFO: [train..][epoch: 12, iter:   5,200, lr:(1.000e-04,)] [eta: 2:19:56, time (data): 0.982 (0.005)] l_pix: 4.4101e-02 
+2025-05-02 17:37:40,006 INFO: [train..][epoch: 13, iter:   5,300, lr:(1.000e-04,)] [eta: 2:15:54, time (data): 0.987 (0.005)] l_pix: 7.2639e-02 
+2025-05-02 17:39:18,632 INFO: [train..][epoch: 13, iter:   5,400, lr:(1.000e-04,)] [eta: 2:11:57, time (data): 0.987 (0.005)] l_pix: 2.4312e-02 
+2025-05-02 17:40:57,242 INFO: [train..][epoch: 13, iter:   5,500, lr:(1.000e-04,)] [eta: 2:08:05, time (data): 0.986 (0.005)] l_pix: 2.1602e-02 
+2025-05-02 17:40:57,242 INFO: Saving models and training states.
+2025-05-02 17:47:29,557 INFO: Validation RescueNet-val
+	 # psnr: 26.8476	Best: 26.8476 @ 5500 iter
+	 # ssim: 0.7218	Best: 0.7218 @ 5500 iter
+
+2025-05-02 17:49:07,555 INFO: [train..][epoch: 13, iter:   5,600, lr:(1.000e-04,)] [eta: 2:09:25, time (data): 0.983 (0.005)] l_pix: 4.7146e-02 
+2025-05-02 17:50:46,552 INFO: [train..][epoch: 14, iter:   5,700, lr:(1.000e-04,)] [eta: 2:05:30, time (data): 0.983 (0.005)] l_pix: 3.2877e-02 
+2025-05-02 17:52:25,266 INFO: [train..][epoch: 14, iter:   5,800, lr:(1.000e-04,)] [eta: 2:01:39, time (data): 0.985 (0.005)] l_pix: 4.8245e-02 
+2025-05-02 17:54:03,586 INFO: [train..][epoch: 14, iter:   5,900, lr:(1.000e-04,)] [eta: 1:57:53, time (data): 0.981 (0.005)] l_pix: 4.3836e-02 
+2025-05-02 17:55:41,855 INFO: [train..][epoch: 14, iter:   6,000, lr:(1.000e-04,)] [eta: 1:54:11, time (data): 0.982 (0.005)] l_pix: 1.8733e-02 
+2025-05-02 17:55:41,855 INFO: Saving models and training states.
+2025-05-02 18:02:18,898 INFO: Validation RescueNet-val
+	 # psnr: 27.2901	Best: 27.2901 @ 6000 iter
+	 # ssim: 0.7246	Best: 0.7246 @ 6000 iter
+
+2025-05-02 18:03:57,502 INFO: [train..][epoch: 15, iter:   6,100, lr:(1.000e-04,)] [eta: 1:54:47, time (data): 0.982 (0.005)] l_pix: 5.6297e-02 
+2025-05-02 18:05:35,964 INFO: [train..][epoch: 15, iter:   6,200, lr:(1.000e-04,)] [eta: 1:51:02, time (data): 0.983 (0.005)] l_pix: 5.1944e-02 
+2025-05-02 18:07:14,276 INFO: [train..][epoch: 15, iter:   6,300, lr:(1.000e-04,)] [eta: 1:47:22, time (data): 0.982 (0.004)] l_pix: 1.8465e-02 
+2025-05-02 18:08:52,687 INFO: [train..][epoch: 15, iter:   6,400, lr:(1.000e-04,)] [eta: 1:43:45, time (data): 0.983 (0.004)] l_pix: 6.4919e-02 
+2025-05-02 18:10:31,844 INFO: [train..][epoch: 16, iter:   6,500, lr:(1.000e-04,)] [eta: 1:40:12, time (data): 0.986 (0.005)] l_pix: 2.6632e-02 
+2025-05-02 18:10:31,844 INFO: Saving models and training states.
+2025-05-02 18:17:08,667 INFO: Validation RescueNet-val
+	 # psnr: 27.5889	Best: 27.5889 @ 6500 iter
+	 # ssim: 0.7268	Best: 0.7268 @ 6500 iter
+
+2025-05-02 18:18:46,670 INFO: [train..][epoch: 16, iter:   6,600, lr:(1.000e-04,)] [eta: 1:40:07, time (data): 0.982 (0.005)] l_pix: 7.2359e-02 
+2025-05-02 18:20:25,075 INFO: [train..][epoch: 16, iter:   6,700, lr:(1.000e-04,)] [eta: 1:36:31, time (data): 0.984 (0.005)] l_pix: 3.1283e-02 
+2025-05-02 18:22:03,553 INFO: [train..][epoch: 16, iter:   6,800, lr:(1.000e-04,)] [eta: 1:33:00, time (data): 0.984 (0.005)] l_pix: 7.5380e-02 
+2025-05-02 18:23:42,764 INFO: [train..][epoch: 17, iter:   6,900, lr:(1.000e-04,)] [eta: 1:29:31, time (data): 0.984 (0.005)] l_pix: 2.8037e-02 
+2025-05-02 18:25:21,443 INFO: [train..][epoch: 17, iter:   7,000, lr:(1.000e-04,)] [eta: 1:26:06, time (data): 0.986 (0.005)] l_pix: 4.6272e-02 
+2025-05-02 18:25:21,443 INFO: Saving models and training states.
+2025-05-02 18:31:53,024 INFO: Validation RescueNet-val
+	 # psnr: 27.7514	Best: 27.7514 @ 7000 iter
+	 # ssim: 0.7283	Best: 0.7283 @ 7000 iter
+
+2025-05-02 18:33:31,018 INFO: [train..][epoch: 17, iter:   7,100, lr:(1.000e-04,)] [eta: 1:25:23, time (data): 0.982 (0.005)] l_pix: 2.1056e-02 
+2025-05-02 18:35:09,511 INFO: [train..][epoch: 17, iter:   7,200, lr:(1.000e-04,)] [eta: 1:21:56, time (data): 0.984 (0.005)] l_pix: 5.0240e-02 
+2025-05-02 18:36:48,841 INFO: [train..][epoch: 18, iter:   7,300, lr:(1.000e-04,)] [eta: 1:18:32, time (data): 0.986 (0.005)] l_pix: 1.1066e-02 
+2025-05-02 18:38:27,473 INFO: [train..][epoch: 18, iter:   7,400, lr:(1.000e-04,)] [eta: 1:15:11, time (data): 0.986 (0.005)] l_pix: 3.6998e-02 
+2025-05-02 18:40:05,923 INFO: [train..][epoch: 18, iter:   7,500, lr:(1.000e-04,)] [eta: 1:11:52, time (data): 0.982 (0.004)] l_pix: 4.4389e-02 
+2025-05-02 18:40:05,923 INFO: Saving models and training states.
+2025-05-02 18:46:37,904 INFO: Validation RescueNet-val
+	 # psnr: 27.8513	Best: 27.8513 @ 7500 iter
+	 # ssim: 0.7296	Best: 0.7296 @ 7500 iter
+
+2025-05-02 18:48:15,861 INFO: [train..][epoch: 18, iter:   7,600, lr:(1.000e-04,)] [eta: 1:10:40, time (data): 0.981 (0.005)] l_pix: 9.1136e-02 
+2025-05-02 18:49:55,322 INFO: [train..][epoch: 19, iter:   7,700, lr:(1.000e-04,)] [eta: 1:07:20, time (data): 0.986 (0.005)] l_pix: 5.8181e-02 
+2025-05-02 18:51:33,918 INFO: [train..][epoch: 19, iter:   7,800, lr:(1.000e-04,)] [eta: 1:04:03, time (data): 0.986 (0.005)] l_pix: 1.8795e-02 
+2025-05-02 18:53:12,538 INFO: [train..][epoch: 19, iter:   7,900, lr:(1.000e-04,)] [eta: 1:00:48, time (data): 0.987 (0.005)] l_pix: 2.6705e-02 
+2025-05-02 18:54:51,290 INFO: [train..][epoch: 19, iter:   8,000, lr:(1.000e-04,)] [eta: 0:57:35, time (data): 0.987 (0.005)] l_pix: 3.9059e-02 
+2025-05-02 18:54:51,291 INFO: Saving models and training states.
+2025-05-02 19:01:31,063 INFO: Validation RescueNet-val
+	 # psnr: 27.9188	Best: 27.9188 @ 8000 iter
+	 # ssim: 0.7306	Best: 0.7306 @ 8000 iter
+
+2025-05-02 19:03:09,737 INFO: [train..][epoch: 20, iter:   8,100, lr:(5.000e-05,)] [eta: 0:55:58, time (data): 0.981 (0.005)] l_pix: 5.6724e-02 
+2025-05-02 19:04:48,164 INFO: [train..][epoch: 20, iter:   8,200, lr:(5.000e-05,)] [eta: 0:52:44, time (data): 0.983 (0.005)] l_pix: 4.0434e-02 
+2025-05-02 19:06:26,681 INFO: [train..][epoch: 20, iter:   8,300, lr:(5.000e-05,)] [eta: 0:49:33, time (data): 0.985 (0.005)] l_pix: 1.7079e-02 
+2025-05-02 19:08:05,318 INFO: [train..][epoch: 20, iter:   8,400, lr:(5.000e-05,)] [eta: 0:46:23, time (data): 0.986 (0.005)] l_pix: 2.5996e-02 
+2025-05-02 19:09:44,856 INFO: [train..][epoch: 21, iter:   8,500, lr:(5.000e-05,)] [eta: 0:43:16, time (data): 0.986 (0.005)] l_pix: 3.3994e-02 
+2025-05-02 19:09:44,857 INFO: Saving models and training states.
+2025-05-02 19:16:19,120 INFO: Validation RescueNet-val
+	 # psnr: 27.9637	Best: 27.9637 @ 8500 iter
+	 # ssim: 0.7316	Best: 0.7316 @ 8500 iter
+
+2025-05-02 19:17:57,072 INFO: [train..][epoch: 21, iter:   8,600, lr:(5.000e-05,)] [eta: 0:41:15, time (data): 0.982 (0.005)] l_pix: 2.9617e-02 
+2025-05-02 19:19:35,465 INFO: [train..][epoch: 21, iter:   8,700, lr:(5.000e-05,)] [eta: 0:38:06, time (data): 0.984 (0.005)] l_pix: 6.3733e-02 
+2025-05-02 19:21:14,111 INFO: [train..][epoch: 21, iter:   8,800, lr:(5.000e-05,)] [eta: 0:34:59, time (data): 0.986 (0.005)] l_pix: 1.9068e-02 
+2025-05-02 19:22:53,401 INFO: [train..][epoch: 22, iter:   8,900, lr:(5.000e-05,)] [eta: 0:31:55, time (data): 0.987 (0.005)] l_pix: 2.2295e-02 
+2025-05-02 19:24:32,108 INFO: [train..][epoch: 22, iter:   9,000, lr:(5.000e-05,)] [eta: 0:28:52, time (data): 0.987 (0.005)] l_pix: 6.0798e-02 
+2025-05-02 19:24:32,109 INFO: Saving models and training states.
+2025-05-02 19:31:10,217 INFO: Validation RescueNet-val
+	 # psnr: 27.9912	Best: 27.9912 @ 9000 iter
+	 # ssim: 0.7325	Best: 0.7325 @ 9000 iter
+
+2025-05-02 19:32:48,166 INFO: [train..][epoch: 22, iter:   9,100, lr:(2.500e-05,)] [eta: 0:26:31, time (data): 0.981 (0.005)] l_pix: 4.1468e-02 
+2025-05-02 19:34:26,710 INFO: [train..][epoch: 22, iter:   9,200, lr:(2.500e-05,)] [eta: 0:23:27, time (data): 0.984 (0.005)] l_pix: 4.0406e-02 
+2025-05-02 19:36:06,061 INFO: [train..][epoch: 23, iter:   9,300, lr:(2.500e-05,)] [eta: 0:20:25, time (data): 0.987 (0.005)] l_pix: 9.5227e-03 
+2025-05-02 19:37:44,687 INFO: [train..][epoch: 23, iter:   9,400, lr:(2.500e-05,)] [eta: 0:17:25, time (data): 0.986 (0.005)] l_pix: 4.6589e-02 
+2025-05-02 19:39:23,336 INFO: [train..][epoch: 23, iter:   9,500, lr:(2.500e-05,)] [eta: 0:14:26, time (data): 0.987 (0.004)] l_pix: 7.8939e-02 
+2025-05-02 19:39:23,337 INFO: Saving models and training states.
+2025-05-02 19:45:59,735 INFO: Validation RescueNet-val
+	 # psnr: 28.0086	Best: 28.0086 @ 9500 iter
+	 # ssim: 0.7331	Best: 0.7331 @ 9500 iter
+
+2025-05-02 19:47:37,750 INFO: [train..][epoch: 23, iter:   9,600, lr:(1.250e-05,)] [eta: 0:11:46, time (data): 0.983 (0.005)] l_pix: 7.7326e-02 
+2025-05-02 19:49:17,157 INFO: [train..][epoch: 24, iter:   9,700, lr:(1.250e-05,)] [eta: 0:08:46, time (data): 0.986 (0.005)] l_pix: 2.2286e-02 
+2025-05-02 19:50:55,733 INFO: [train..][epoch: 24, iter:   9,800, lr:(1.250e-05,)] [eta: 0:05:49, time (data): 0.986 (0.005)] l_pix: 3.7284e-02 
+2025-05-02 19:52:34,422 INFO: [train..][epoch: 24, iter:   9,900, lr:(1.250e-05,)] [eta: 0:02:52, time (data): 0.987 (0.005)] l_pix: 4.2813e-02 
+2025-05-02 19:54:13,217 INFO: [train..][epoch: 24, iter:  10,000, lr:(1.250e-05,)] [eta: -1 day, 23:59:59, time (data): 0.988 (0.005)] l_pix: 7.9039e-02 
+2025-05-02 19:54:13,217 INFO: Saving models and training states.
+2025-05-02 20:00:57,161 INFO: Validation RescueNet-val
+	 # psnr: 28.0207	Best: 28.0207 @ 10000 iter
+	 # ssim: 0.7336	Best: 0.7336 @ 10000 iter
+
+2025-05-02 20:00:57,927 INFO: End of training. Time consumed: 4:56:41
+2025-05-02 20:00:57,928 INFO: Save the latest model.
+2025-05-02 20:07:32,992 INFO: Validation RescueNet-val
+	 # psnr: 28.0207	Best: 28.0207 @ 10001 iter
+	 # ssim: 0.7336	Best: 0.7336 @ 10001 iter
+

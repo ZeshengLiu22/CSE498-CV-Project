@@ -1,0 +1,686 @@
+2025-05-02 14:59:01,738 INFO: 
+                ____                _       _____  ____
+               / __ ) ____ _ _____ (_)_____/ ___/ / __ \
+              / __  |/ __ `// ___// // ___/\__ \ / /_/ /
+             / /_/ // /_/ /(__  )/ // /__ ___/ // _, _/
+            /_____/ \__,_//____//_/ \___//____//_/ |_|
+     ______                   __   __                 __      __
+    / ____/____   ____   ____/ /  / /   __  __ _____ / /__   / /
+   / / __ / __ \ / __ \ / __  /  / /   / / / // ___// //_/  / /
+  / /_/ // /_/ // /_/ // /_/ /  / /___/ /_/ // /__ / /<    /_/
+  \____/ \____/ \____/ \____/  /_____/\____/ \___//_/|_|  (_)
+    
+Version Information: 
+	BasicSR: 1.3.5
+	PyTorch: 2.7.0+cu128
+	TorchVision: 0.22.0+cu128
+2025-05-02 14:59:01,738 INFO: 
+  name: train_SwinFIR_SRx4_FloodNet_1024
+  model_type: SwinFIRModel
+  scale: 4
+  num_gpu: 1
+  manual_seed: 0
+  datasets:[
+    train:[
+      name: FloodNet-train
+      type: PairedImageDADataset
+      dataroot_gt: datasets/uploads/New_LR_dataset_1024_train/FloodNet/HR/train-org-img
+      dataroot_lq: datasets/uploads/New_LR_dataset_1024_train/FloodNet/LR/train-org-img
+      io_backend:[
+        type: disk
+      ]
+      gt_size: 1024
+      use_hflip: True
+      use_rot: True
+      use_mixup: True
+      use_channelshuffle: True
+      use_shuffle: True
+      num_worker_per_gpu: 6
+      batch_size_per_gpu: 1
+      dataset_enlarge_ratio: 1
+      prefetch_mode: None
+      phase: train
+      scale: 4
+    ]
+    val_1:[
+      name: FloodNet-Val
+      type: PairedImageDataset
+      dataroot_gt: datasets/uploads/New_LR_dataset_1024_val/FloodNet/HR/train-org-img
+      dataroot_lq: datasets/uploads/New_LR_dataset_1024_val/FloodNet/LR/train-org-img
+      io_backend:[
+        type: disk
+      ]
+      phase: val
+      scale: 4
+    ]
+  ]
+  network_g:[
+    type: SwinFIR
+    upscale: 4
+    in_chans: 3
+    img_size: 256
+    window_size: 16
+    img_range: 1.0
+    depths: [6, 6, 6, 6, 6, 6]
+    embed_dim: 180
+    num_heads: [6, 6, 6, 6, 6, 6]
+    mlp_ratio: 2
+    upsampler: pixelshuffle
+    resi_connection: SFB
+  ]
+  path:[
+    pretrain_network_g: None
+    strict_load_g: True
+    resume_state: None
+    experiments_root: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_FloodNet_1024
+    models: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_FloodNet_1024/models
+    training_states: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_FloodNet_1024/training_states
+    log: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_FloodNet_1024
+    visualization: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR/experiments/train_SwinFIR_SRx4_FloodNet_1024/visualization
+  ]
+  train:[
+    ema_decay: 0.999
+    optim_g:[
+      type: Adam
+      lr: 0.0002
+      weight_decay: 0
+      betas: [0.9, 0.99]
+    ]
+    scheduler:[
+      type: MultiStepLR
+      milestones: [5000, 8000, 9000, 9500]
+      gamma: 0.5
+    ]
+    total_iter: 10000
+    warmup_iter: -1
+    pixel_opt:[
+      type: CharbonnierLossColor
+      loss_weight: 1.0
+      reduction: mean
+    ]
+  ]
+  val:[
+    val_freq: 500.0
+    save_img: False
+    pbar: False
+    metrics:[
+      psnr:[
+        type: calculate_psnr
+        crop_border: 3
+        test_y_channel: True
+        better: higher
+      ]
+      ssim:[
+        type: calculate_ssim
+        crop_border: 3
+        test_y_channel: True
+        better: higher
+      ]
+    ]
+  ]
+  logger:[
+    print_freq: 100
+    save_checkpoint_freq: 500.0
+    use_tb_logger: False
+    wandb:[
+      project: None
+      resume_id: None
+    ]
+  ]
+  dist_params:[
+    backend: nccl
+    port: 29500
+  ]
+  dist: False
+  rank: 0
+  world_size: 1
+  auto_resume: False
+  is_train: True
+  root_path: /teamspace/studios/this_studio/CSE498-CV-Project/SwinFIR
+
+2025-05-02 14:59:01,980 INFO: Dataset [PairedImageDADataset] - FloodNet-train is built.
+2025-05-02 14:59:01,981 INFO: Training statistics:
+	Number of train images: 400
+	Dataset enlarge ratio: 1
+	Batch size per gpu: 1
+	World size (gpu number): 1
+	Require iter number per epoch: 400
+	Total epochs: 25; iters: 10000.
+2025-05-02 14:59:02,125 INFO: Dataset [PairedImageDataset] - FloodNet-Val is built.
+2025-05-02 14:59:02,125 INFO: Number of val images/folders in FloodNet-Val: 200
+2025-05-02 14:59:02,882 INFO: Network [SwinFIR] is created.
+2025-05-02 14:59:03,253 INFO: Network: SwinFIR, with parameters: 14,591,235
+2025-05-02 14:59:03,253 INFO: SwinFIR(
+  (conv_first): Conv2d(3, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (patch_embed): PatchEmbed(
+    (norm): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+  )
+  (patch_unembed): PatchUnEmbed()
+  (pos_drop): Dropout(p=0.0, inplace=False)
+  (layers): ModuleList(
+    (0): RSTB(
+      (residual_group): BasicLayer(
+        dim=180, input_resolution=(256, 256), depth=6
+        (blocks): ModuleList(
+          (0): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): Identity()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (1): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (2): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (3): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (4): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (5): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+      )
+      (conv): SFB(
+        (S): ResB(
+          (body): Sequential(
+            (0): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (1): LeakyReLU(negative_slope=0.2, inplace=True)
+            (2): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+        (F): SpectralTransform(
+          (conv1): Sequential(
+            (0): Conv2d(180, 90, kernel_size=(1, 1), stride=(1, 1))
+            (1): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (fu): FourierUnit(
+            (conv_layer): Conv2d(180, 180, kernel_size=(1, 1), stride=(1, 1))
+            (relu): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (conv2): Conv2d(90, 180, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (fusion): Conv2d(360, 180, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (patch_embed): PatchEmbed()
+      (patch_unembed): PatchUnEmbed()
+    )
+    (1-5): 5 x RSTB(
+      (residual_group): BasicLayer(
+        dim=180, input_resolution=(256, 256), depth=6
+        (blocks): ModuleList(
+          (0): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (1): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (2): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (3): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (4): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (5): SwinTransformerBlock(
+            dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=2
+            (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (attn): WindowAttention(
+              dim=180, window_size=(16, 16), num_heads=6
+              (qkv): Linear(in_features=180, out_features=540, bias=True)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=180, out_features=180, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+              (softmax): Softmax(dim=-1)
+            )
+            (drop_path): DropPath()
+            (norm2): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=180, out_features=360, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=360, out_features=180, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+      )
+      (conv): SFB(
+        (S): ResB(
+          (body): Sequential(
+            (0): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+            (1): LeakyReLU(negative_slope=0.2, inplace=True)
+            (2): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+        (F): SpectralTransform(
+          (conv1): Sequential(
+            (0): Conv2d(180, 90, kernel_size=(1, 1), stride=(1, 1))
+            (1): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (fu): FourierUnit(
+            (conv_layer): Conv2d(180, 180, kernel_size=(1, 1), stride=(1, 1))
+            (relu): LeakyReLU(negative_slope=0.2, inplace=True)
+          )
+          (conv2): Conv2d(90, 180, kernel_size=(1, 1), stride=(1, 1))
+        )
+        (fusion): Conv2d(360, 180, kernel_size=(1, 1), stride=(1, 1))
+      )
+      (patch_embed): PatchEmbed()
+      (patch_unembed): PatchUnEmbed()
+    )
+  )
+  (norm): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
+  (conv_after_body): Conv2d(180, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv_before_upsample): Sequential(
+    (0): Conv2d(180, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): LeakyReLU(negative_slope=0.01, inplace=True)
+  )
+  (upsample): Upsample(
+    (0): Conv2d(64, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (1): PixelShuffle(upscale_factor=2)
+    (2): Conv2d(64, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (3): PixelShuffle(upscale_factor=2)
+  )
+  (conv_last): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+)
+2025-05-02 14:59:03,256 INFO: Use Exponential Moving Average with decay: 0.999
+2025-05-02 14:59:03,965 INFO: Network [SwinFIR] is created.
+2025-05-02 14:59:04,197 INFO: Loss [CharbonnierLossColor] is created.
+2025-05-02 14:59:04,199 INFO: Model [SwinFIRModel] is created.
+2025-05-02 14:59:04,276 INFO: Start training from epoch: 0, iter: 0
+2025-05-02 15:00:45,365 INFO: [train..][epoch:  0, iter:     100, lr:(2.000e-04,)] [eta: 2:37:50, time (data): 1.011 (0.008)] l_pix: 1.2358e-01 
+2025-05-02 15:02:23,318 INFO: [train..][epoch:  0, iter:     200, lr:(2.000e-04,)] [eta: 2:38:06, time (data): 0.995 (0.006)] l_pix: 5.4159e-02 
+2025-05-02 15:04:01,589 INFO: [train..][epoch:  0, iter:     300, lr:(2.000e-04,)] [eta: 2:37:16, time (data): 0.983 (0.004)] l_pix: 6.7003e-02 
+2025-05-02 15:05:40,026 INFO: [train..][epoch:  0, iter:     400, lr:(2.000e-04,)] [eta: 2:36:06, time (data): 0.984 (0.005)] l_pix: 8.2394e-02 
+2025-05-02 15:07:18,710 INFO: [train..][epoch:  1, iter:     500, lr:(2.000e-04,)] [eta: 2:34:50, time (data): 0.983 (0.005)] l_pix: 8.7364e-02 
+2025-05-02 15:07:18,710 INFO: Saving models and training states.
+2025-05-02 15:14:33,683 INFO: Validation FloodNet-Val
+	 # psnr: 17.4167	Best: 17.4167 @ 500 iter
+	 # ssim: 0.3973	Best: 0.3973 @ 500 iter
+
+2025-05-02 15:16:11,534 INFO: [train..][epoch:  1, iter:     600, lr:(2.000e-04,)] [eta: 4:26:35, time (data): 0.981 (0.005)] l_pix: 1.0717e-01 
+2025-05-02 15:17:49,923 INFO: [train..][epoch:  1, iter:     700, lr:(2.000e-04,)] [eta: 4:07:52, time (data): 0.984 (0.004)] l_pix: 7.9061e-02 
+2025-05-02 15:19:28,481 INFO: [train..][epoch:  1, iter:     800, lr:(2.000e-04,)] [eta: 3:53:28, time (data): 0.985 (0.004)] l_pix: 4.2252e-02 
+2025-05-02 15:21:07,733 INFO: [train..][epoch:  2, iter:     900, lr:(2.000e-04,)] [eta: 3:42:00, time (data): 0.986 (0.005)] l_pix: 6.3488e-02 
+2025-05-02 15:22:46,516 INFO: [train..][epoch:  2, iter:   1,000, lr:(2.000e-04,)] [eta: 3:32:25, time (data): 0.987 (0.005)] l_pix: 6.4244e-02 
+2025-05-02 15:22:46,517 INFO: Saving models and training states.
+2025-05-02 15:29:25,374 INFO: Validation FloodNet-Val
+	 # psnr: 19.5907	Best: 19.5907 @ 1000 iter
+	 # ssim: 0.4693	Best: 0.4693 @ 1000 iter
+
+2025-05-02 15:31:03,250 INFO: [train..][epoch:  2, iter:   1,100, lr:(2.000e-04,)] [eta: 4:17:54, time (data): 0.979 (0.005)] l_pix: 8.6393e-02 
+2025-05-02 15:32:41,590 INFO: [train..][epoch:  2, iter:   1,200, lr:(2.000e-04,)] [eta: 4:05:46, time (data): 0.981 (0.005)] l_pix: 7.5919e-02 
+2025-05-02 15:34:20,939 INFO: [train..][epoch:  3, iter:   1,300, lr:(2.000e-04,)] [eta: 3:55:23, time (data): 0.986 (0.005)] l_pix: 7.6498e-02 
+2025-05-02 15:35:59,758 INFO: [train..][epoch:  3, iter:   1,400, lr:(2.000e-04,)] [eta: 3:46:10, time (data): 0.987 (0.005)] l_pix: 8.1425e-02 
+2025-05-02 15:37:38,596 INFO: [train..][epoch:  3, iter:   1,500, lr:(2.000e-04,)] [eta: 3:37:58, time (data): 0.988 (0.005)] l_pix: 6.4856e-02 
+2025-05-02 15:37:38,597 INFO: Saving models and training states.
+2025-05-02 15:44:10,496 INFO: Validation FloodNet-Val
+	 # psnr: 21.4851	Best: 21.4851 @ 1500 iter
+	 # ssim: 0.5314	Best: 0.5314 @ 1500 iter
+
+2025-05-02 15:45:48,364 INFO: [train..][epoch:  3, iter:   1,600, lr:(2.000e-04,)] [eta: 4:04:47, time (data): 0.983 (0.005)] l_pix: 7.6088e-02 
+2025-05-02 15:47:27,446 INFO: [train..][epoch:  4, iter:   1,700, lr:(2.000e-04,)] [eta: 3:55:42, time (data): 0.984 (0.005)] l_pix: 6.3633e-02 
+2025-05-02 15:49:06,228 INFO: [train..][epoch:  4, iter:   1,800, lr:(2.000e-04,)] [eta: 3:47:26, time (data): 0.986 (0.005)] l_pix: 7.6775e-02 
+2025-05-02 15:50:44,929 INFO: [train..][epoch:  4, iter:   1,900, lr:(2.000e-04,)] [eta: 3:39:51, time (data): 0.987 (0.004)] l_pix: 7.8625e-02 
+2025-05-02 15:52:23,693 INFO: [train..][epoch:  4, iter:   2,000, lr:(2.000e-04,)] [eta: 3:32:51, time (data): 0.987 (0.005)] l_pix: 7.3652e-02 
+2025-05-02 15:52:23,693 INFO: Saving models and training states.
+2025-05-02 15:58:56,628 INFO: Validation FloodNet-Val
+	 # psnr: 23.1546	Best: 23.1546 @ 2000 iter
+	 # ssim: 0.5725	Best: 0.5725 @ 2000 iter
+
+2025-05-02 16:00:35,502 INFO: [train..][epoch:  5, iter:   2,100, lr:(2.000e-04,)] [eta: 3:51:00, time (data): 0.980 (0.005)] l_pix: 5.4837e-02 
+2025-05-02 16:02:13,884 INFO: [train..][epoch:  5, iter:   2,200, lr:(2.000e-04,)] [eta: 3:43:32, time (data): 0.982 (0.005)] l_pix: 6.0112e-02 
+2025-05-02 16:03:52,572 INFO: [train..][epoch:  5, iter:   2,300, lr:(2.000e-04,)] [eta: 3:36:35, time (data): 0.987 (0.004)] l_pix: 6.3965e-02 
+2025-05-02 16:05:31,288 INFO: [train..][epoch:  5, iter:   2,400, lr:(2.000e-04,)] [eta: 3:30:04, time (data): 0.987 (0.004)] l_pix: 1.4183e-02 
+2025-05-02 16:07:10,490 INFO: [train..][epoch:  6, iter:   2,500, lr:(2.000e-04,)] [eta: 3:23:58, time (data): 0.986 (0.005)] l_pix: 5.7698e-02 
+2025-05-02 16:07:10,491 INFO: Saving models and training states.
+2025-05-02 16:13:41,473 INFO: Validation FloodNet-Val
+	 # psnr: 24.5751	Best: 24.5751 @ 2500 iter
+	 # ssim: 0.5976	Best: 0.5976 @ 2500 iter
+
+2025-05-02 16:15:19,500 INFO: [train..][epoch:  6, iter:   2,600, lr:(2.000e-04,)] [eta: 3:36:42, time (data): 0.983 (0.005)] l_pix: 2.2919e-02 
+2025-05-02 16:16:57,999 INFO: [train..][epoch:  6, iter:   2,700, lr:(2.000e-04,)] [eta: 3:30:17, time (data): 0.985 (0.005)] l_pix: 3.7709e-02 
+2025-05-02 16:18:36,649 INFO: [train..][epoch:  6, iter:   2,800, lr:(2.000e-04,)] [eta: 3:24:14, time (data): 0.986 (0.005)] l_pix: 3.8955e-02 
+2025-05-02 16:20:16,016 INFO: [train..][epoch:  7, iter:   2,900, lr:(2.000e-04,)] [eta: 3:18:30, time (data): 0.987 (0.005)] l_pix: 4.0019e-02 
+2025-05-02 16:21:54,838 INFO: [train..][epoch:  7, iter:   3,000, lr:(2.000e-04,)] [eta: 3:13:02, time (data): 0.988 (0.005)] l_pix: 4.6251e-02 
+2025-05-02 16:21:54,838 INFO: Saving models and training states.
+2025-05-02 16:28:27,681 INFO: Validation FloodNet-Val
+	 # psnr: 25.5082	Best: 25.5082 @ 3000 iter
+	 # ssim: 0.6096	Best: 0.6096 @ 3000 iter
+
+2025-05-02 16:30:05,767 INFO: [train..][epoch:  7, iter:   3,100, lr:(2.000e-04,)] [eta: 3:22:20, time (data): 0.981 (0.005)] l_pix: 5.3985e-02 
+2025-05-02 16:31:44,378 INFO: [train..][epoch:  7, iter:   3,200, lr:(2.000e-04,)] [eta: 3:16:40, time (data): 0.984 (0.005)] l_pix: 1.3003e-02 
+2025-05-02 16:33:23,865 INFO: [train..][epoch:  8, iter:   3,300, lr:(2.000e-04,)] [eta: 3:11:16, time (data): 0.987 (0.005)] l_pix: 4.3396e-02 
+2025-05-02 16:35:02,785 INFO: [train..][epoch:  8, iter:   3,400, lr:(2.000e-04,)] [eta: 3:06:04, time (data): 0.988 (0.005)] l_pix: 7.5804e-02 
+2025-05-02 16:36:41,691 INFO: [train..][epoch:  8, iter:   3,500, lr:(2.000e-04,)] [eta: 3:01:05, time (data): 0.989 (0.005)] l_pix: 4.6116e-02 
+2025-05-02 16:36:41,691 INFO: Saving models and training states.
+2025-05-02 16:43:17,494 INFO: Validation FloodNet-Val
+	 # psnr: 26.4235	Best: 26.4235 @ 3500 iter
+	 # ssim: 0.6181	Best: 0.6181 @ 3500 iter
+
+2025-05-02 16:44:55,476 INFO: [train..][epoch:  8, iter:   3,600, lr:(2.000e-04,)] [eta: 3:07:58, time (data): 0.984 (0.005)] l_pix: 3.7513e-02 
+2025-05-02 16:46:34,919 INFO: [train..][epoch:  9, iter:   3,700, lr:(2.000e-04,)] [eta: 3:02:51, time (data): 0.988 (0.005)] l_pix: 2.8286e-02 
+2025-05-02 16:48:13,788 INFO: [train..][epoch:  9, iter:   3,800, lr:(2.000e-04,)] [eta: 2:57:54, time (data): 0.988 (0.005)] l_pix: 3.8318e-02 
+2025-05-02 16:49:52,678 INFO: [train..][epoch:  9, iter:   3,900, lr:(2.000e-04,)] [eta: 2:53:07, time (data): 0.989 (0.005)] l_pix: 6.1776e-02 
+2025-05-02 16:51:31,557 INFO: [train..][epoch:  9, iter:   4,000, lr:(2.000e-04,)] [eta: 2:48:30, time (data): 0.989 (0.005)] l_pix: 5.0188e-02 
+2025-05-02 16:51:31,558 INFO: Saving models and training states.
+2025-05-02 16:58:05,339 INFO: Validation FloodNet-Val
+	 # psnr: 27.0917	Best: 27.0917 @ 4000 iter
+	 # ssim: 0.6231	Best: 0.6231 @ 4000 iter
+
+2025-05-02 16:59:44,235 INFO: [train..][epoch: 10, iter:   4,100, lr:(2.000e-04,)] [eta: 2:53:27, time (data): 0.981 (0.005)] l_pix: 3.2678e-02 
+2025-05-02 17:01:22,930 INFO: [train..][epoch: 10, iter:   4,200, lr:(2.000e-04,)] [eta: 2:48:44, time (data): 0.984 (0.005)] l_pix: 2.7013e-02 
+2025-05-02 17:03:01,703 INFO: [train..][epoch: 10, iter:   4,300, lr:(2.000e-04,)] [eta: 2:44:08, time (data): 0.988 (0.004)] l_pix: 4.1204e-02 
+2025-05-02 17:04:40,563 INFO: [train..][epoch: 10, iter:   4,400, lr:(2.000e-04,)] [eta: 2:39:42, time (data): 0.988 (0.004)] l_pix: 3.4299e-02 
+2025-05-02 17:06:20,379 INFO: [train..][epoch: 11, iter:   4,500, lr:(2.000e-04,)] [eta: 2:35:23, time (data): 0.991 (0.005)] l_pix: 5.2690e-02 
+2025-05-02 17:06:20,380 INFO: Saving models and training states.
+2025-05-02 17:13:00,656 INFO: Validation FloodNet-Val
+	 # psnr: 27.5146	Best: 27.5146 @ 4500 iter
+	 # ssim: 0.6258	Best: 0.6258 @ 4500 iter
+
+2025-05-02 17:14:38,838 INFO: [train..][epoch: 11, iter:   4,600, lr:(2.000e-04,)] [eta: 2:39:00, time (data): 0.986 (0.005)] l_pix: 4.8577e-02 
+2025-05-02 17:16:17,489 INFO: [train..][epoch: 11, iter:   4,700, lr:(2.000e-04,)] [eta: 2:34:35, time (data): 0.987 (0.005)] l_pix: 5.9640e-02 
+2025-05-02 17:17:56,264 INFO: [train..][epoch: 11, iter:   4,800, lr:(2.000e-04,)] [eta: 2:30:17, time (data): 0.988 (0.005)] l_pix: 4.8821e-02 
+2025-05-02 17:19:35,883 INFO: [train..][epoch: 12, iter:   4,900, lr:(2.000e-04,)] [eta: 2:26:07, time (data): 0.989 (0.005)] l_pix: 3.0864e-02 
+2025-05-02 17:21:14,791 INFO: [train..][epoch: 12, iter:   5,000, lr:(2.000e-04,)] [eta: 2:22:02, time (data): 0.989 (0.005)] l_pix: 3.0659e-02 
+2025-05-02 17:21:14,792 INFO: Saving models and training states.
+2025-05-02 17:27:46,128 INFO: Validation FloodNet-Val
+	 # psnr: 27.8496	Best: 27.8496 @ 5000 iter
+	 # ssim: 0.6281	Best: 0.6281 @ 5000 iter
+
+2025-05-02 17:29:24,161 INFO: [train..][epoch: 12, iter:   5,100, lr:(1.000e-04,)] [eta: 2:24:18, time (data): 0.981 (0.005)] l_pix: 3.0471e-02 
+2025-05-02 17:31:02,729 INFO: [train..][epoch: 12, iter:   5,200, lr:(1.000e-04,)] [eta: 2:20:09, time (data): 0.984 (0.005)] l_pix: 3.5141e-02 
+2025-05-02 17:32:42,261 INFO: [train..][epoch: 13, iter:   5,300, lr:(1.000e-04,)] [eta: 2:16:07, time (data): 0.989 (0.005)] l_pix: 3.5932e-02 
+2025-05-02 17:34:21,208 INFO: [train..][epoch: 13, iter:   5,400, lr:(1.000e-04,)] [eta: 2:12:09, time (data): 0.989 (0.005)] l_pix: 8.4089e-02 
+2025-05-02 17:36:00,005 INFO: [train..][epoch: 13, iter:   5,500, lr:(1.000e-04,)] [eta: 2:08:17, time (data): 0.986 (0.004)] l_pix: 6.5441e-02 
+2025-05-02 17:36:00,005 INFO: Saving models and training states.
+2025-05-02 17:42:33,208 INFO: Validation FloodNet-Val
+	 # psnr: 28.1725	Best: 28.1725 @ 5500 iter
+	 # ssim: 0.6299	Best: 0.6299 @ 5500 iter
+
+2025-05-02 17:44:11,269 INFO: [train..][epoch: 13, iter:   5,600, lr:(1.000e-04,)] [eta: 2:09:37, time (data): 0.983 (0.005)] l_pix: 3.7628e-02 
+2025-05-02 17:45:50,534 INFO: [train..][epoch: 14, iter:   5,700, lr:(1.000e-04,)] [eta: 2:05:42, time (data): 0.987 (0.005)] l_pix: 6.0708e-02 
+2025-05-02 17:47:29,348 INFO: [train..][epoch: 14, iter:   5,800, lr:(1.000e-04,)] [eta: 2:01:51, time (data): 0.988 (0.005)] l_pix: 6.4479e-02 
+2025-05-02 17:49:08,087 INFO: [train..][epoch: 14, iter:   5,900, lr:(1.000e-04,)] [eta: 1:58:04, time (data): 0.987 (0.004)] l_pix: 3.3382e-02 
+2025-05-02 17:50:46,890 INFO: [train..][epoch: 14, iter:   6,000, lr:(1.000e-04,)] [eta: 1:54:22, time (data): 0.987 (0.005)] l_pix: 4.0883e-02 
+2025-05-02 17:50:46,890 INFO: Saving models and training states.
+2025-05-02 17:57:27,470 INFO: Validation FloodNet-Val
+	 # psnr: 28.3480	Best: 28.3480 @ 6000 iter
+	 # ssim: 0.6309	Best: 0.6309 @ 6000 iter
+
+2025-05-02 17:59:06,143 INFO: [train..][epoch: 15, iter:   6,100, lr:(1.000e-04,)] [eta: 1:55:00, time (data): 0.982 (0.005)] l_pix: 2.8139e-02 
+2025-05-02 18:00:44,765 INFO: [train..][epoch: 15, iter:   6,200, lr:(1.000e-04,)] [eta: 1:51:15, time (data): 0.985 (0.005)] l_pix: 3.7888e-02 
+2025-05-02 18:02:23,678 INFO: [train..][epoch: 15, iter:   6,300, lr:(1.000e-04,)] [eta: 1:47:34, time (data): 0.990 (0.005)] l_pix: 3.5181e-02 
+2025-05-02 18:04:02,627 INFO: [train..][epoch: 15, iter:   6,400, lr:(1.000e-04,)] [eta: 1:43:57, time (data): 0.990 (0.005)] l_pix: 2.8592e-02 
+2025-05-02 18:05:42,221 INFO: [train..][epoch: 16, iter:   6,500, lr:(1.000e-04,)] [eta: 1:40:24, time (data): 0.989 (0.005)] l_pix: 3.5656e-02 
+2025-05-02 18:05:42,221 INFO: Saving models and training states.
+2025-05-02 18:12:26,878 INFO: Validation FloodNet-Val
+	 # psnr: 28.4394	Best: 28.4394 @ 6500 iter
+	 # ssim: 0.6317	Best: 0.6317 @ 6500 iter
+
+2025-05-02 18:14:05,031 INFO: [train..][epoch: 16, iter:   6,600, lr:(1.000e-04,)] [eta: 1:40:22, time (data): 0.985 (0.005)] l_pix: 5.1868e-02 
+2025-05-02 18:15:43,877 INFO: [train..][epoch: 16, iter:   6,700, lr:(1.000e-04,)] [eta: 1:36:46, time (data): 0.989 (0.005)] l_pix: 1.0511e-02 
+2025-05-02 18:17:22,927 INFO: [train..][epoch: 16, iter:   6,800, lr:(1.000e-04,)] [eta: 1:33:14, time (data): 0.990 (0.005)] l_pix: 4.4168e-02 
+2025-05-02 18:19:02,648 INFO: [train..][epoch: 17, iter:   6,900, lr:(1.000e-04,)] [eta: 1:29:46, time (data): 0.991 (0.005)] l_pix: 2.8353e-02 
+2025-05-02 18:20:41,603 INFO: [train..][epoch: 17, iter:   7,000, lr:(1.000e-04,)] [eta: 1:26:20, time (data): 0.990 (0.005)] l_pix: 4.9731e-02 
+2025-05-02 18:20:41,603 INFO: Saving models and training states.
+2025-05-02 18:27:18,450 INFO: Validation FloodNet-Val
+	 # psnr: 28.4998	Best: 28.4998 @ 7000 iter
+	 # ssim: 0.6323	Best: 0.6323 @ 7000 iter
+
+2025-05-02 18:28:56,575 INFO: [train..][epoch: 17, iter:   7,100, lr:(1.000e-04,)] [eta: 1:25:39, time (data): 0.982 (0.005)] l_pix: 3.2313e-02 
+2025-05-02 18:30:35,288 INFO: [train..][epoch: 17, iter:   7,200, lr:(1.000e-04,)] [eta: 1:22:11, time (data): 0.985 (0.005)] l_pix: 2.8571e-02 
+2025-05-02 18:32:14,986 INFO: [train..][epoch: 18, iter:   7,300, lr:(1.000e-04,)] [eta: 1:18:46, time (data): 0.988 (0.005)] l_pix: 5.1823e-02 
+2025-05-02 18:33:53,952 INFO: [train..][epoch: 18, iter:   7,400, lr:(1.000e-04,)] [eta: 1:15:24, time (data): 0.989 (0.005)] l_pix: 3.7549e-02 
+2025-05-02 18:35:32,853 INFO: [train..][epoch: 18, iter:   7,500, lr:(1.000e-04,)] [eta: 1:12:05, time (data): 0.988 (0.004)] l_pix: 2.6613e-02 
+2025-05-02 18:35:32,853 INFO: Saving models and training states.
+2025-05-02 18:42:10,398 INFO: Validation FloodNet-Val
+	 # psnr: 28.5241	Best: 28.5241 @ 7500 iter
+	 # ssim: 0.6327	Best: 0.6327 @ 7500 iter
+
+2025-05-02 18:43:48,544 INFO: [train..][epoch: 18, iter:   7,600, lr:(1.000e-04,)] [eta: 1:10:54, time (data): 0.984 (0.005)] l_pix: 4.6257e-02 
+2025-05-02 18:45:27,910 INFO: [train..][epoch: 19, iter:   7,700, lr:(1.000e-04,)] [eta: 1:07:33, time (data): 0.985 (0.005)] l_pix: 3.9917e-02 
+2025-05-02 18:47:06,306 INFO: [train..][epoch: 19, iter:   7,800, lr:(1.000e-04,)] [eta: 1:04:15, time (data): 0.984 (0.005)] l_pix: 3.0039e-02 
+2025-05-02 18:48:45,269 INFO: [train..][epoch: 19, iter:   7,900, lr:(1.000e-04,)] [eta: 1:00:59, time (data): 0.989 (0.005)] l_pix: 2.8761e-02 
+2025-05-02 18:50:24,295 INFO: [train..][epoch: 19, iter:   8,000, lr:(1.000e-04,)] [eta: 0:57:46, time (data): 0.990 (0.005)] l_pix: 4.1553e-02 
+2025-05-02 18:50:24,295 INFO: Saving models and training states.
+2025-05-02 18:57:44,323 INFO: Validation FloodNet-Val
+	 # psnr: 28.5378	Best: 28.5378 @ 8000 iter
+	 # ssim: 0.6330	Best: 0.6330 @ 8000 iter
+
+2025-05-02 18:59:23,142 INFO: [train..][epoch: 20, iter:   8,100, lr:(5.000e-05,)] [eta: 0:56:18, time (data): 0.982 (0.005)] l_pix: 3.2486e-02 
+2025-05-02 19:01:01,810 INFO: [train..][epoch: 20, iter:   8,200, lr:(5.000e-05,)] [eta: 0:53:03, time (data): 0.985 (0.005)] l_pix: 4.3221e-02 
+2025-05-02 19:02:40,699 INFO: [train..][epoch: 20, iter:   8,300, lr:(5.000e-05,)] [eta: 0:49:50, time (data): 0.990 (0.005)] l_pix: 1.7527e-02 
+2025-05-02 19:04:19,725 INFO: [train..][epoch: 20, iter:   8,400, lr:(5.000e-05,)] [eta: 0:46:40, time (data): 0.990 (0.005)] l_pix: 2.6420e-02 
+2025-05-02 19:05:59,544 INFO: [train..][epoch: 21, iter:   8,500, lr:(5.000e-05,)] [eta: 0:43:31, time (data): 0.989 (0.005)] l_pix: 6.9363e-02 
+2025-05-02 19:05:59,545 INFO: Saving models and training states.
+2025-05-02 19:13:21,145 INFO: Validation FloodNet-Val
+	 # psnr: 28.5517	Best: 28.5517 @ 8500 iter
+	 # ssim: 0.6334	Best: 0.6334 @ 8500 iter
+
+2025-05-02 19:14:59,181 INFO: [train..][epoch: 21, iter:   8,600, lr:(5.000e-05,)] [eta: 0:41:36, time (data): 0.983 (0.005)] l_pix: 2.8732e-02 
+2025-05-02 19:16:37,220 INFO: [train..][epoch: 21, iter:   8,700, lr:(5.000e-05,)] [eta: 0:38:26, time (data): 0.981 (0.005)] l_pix: 1.4154e-02 
+2025-05-02 19:18:16,012 INFO: [train..][epoch: 21, iter:   8,800, lr:(5.000e-05,)] [eta: 0:35:18, time (data): 0.985 (0.005)] l_pix: 2.1610e-02 
+2025-05-02 19:19:55,846 INFO: [train..][epoch: 22, iter:   8,900, lr:(5.000e-05,)] [eta: 0:32:11, time (data): 0.992 (0.005)] l_pix: 5.8725e-02 
+2025-05-02 19:21:34,885 INFO: [train..][epoch: 22, iter:   9,000, lr:(5.000e-05,)] [eta: 0:29:07, time (data): 0.991 (0.005)] l_pix: 1.9635e-02 
+2025-05-02 19:21:34,885 INFO: Saving models and training states.
+2025-05-02 19:28:49,952 INFO: Validation FloodNet-Val
+	 # psnr: 28.5680	Best: 28.5680 @ 9000 iter
+	 # ssim: 0.6340	Best: 0.6340 @ 9000 iter
+
+2025-05-02 19:30:27,986 INFO: [train..][epoch: 22, iter:   9,100, lr:(2.500e-05,)] [eta: 0:26:48, time (data): 0.983 (0.005)] l_pix: 2.4629e-02 
+2025-05-02 19:32:06,181 INFO: [train..][epoch: 22, iter:   9,200, lr:(2.500e-05,)] [eta: 0:23:42, time (data): 0.982 (0.005)] l_pix: 7.8193e-02 
+2025-05-02 19:33:45,643 INFO: [train..][epoch: 23, iter:   9,300, lr:(2.500e-05,)] [eta: 0:20:38, time (data): 0.989 (0.005)] l_pix: 2.5867e-02 
+2025-05-02 19:35:24,731 INFO: [train..][epoch: 23, iter:   9,400, lr:(2.500e-05,)] [eta: 0:17:36, time (data): 0.990 (0.005)] l_pix: 9.1610e-03 
+2025-05-02 19:37:03,721 INFO: [train..][epoch: 23, iter:   9,500, lr:(2.500e-05,)] [eta: 0:14:35, time (data): 0.992 (0.005)] l_pix: 4.9393e-02 
+2025-05-02 19:37:03,722 INFO: Saving models and training states.
+2025-05-02 19:43:55,548 INFO: Validation FloodNet-Val
+	 # psnr: 28.5801	Best: 28.5801 @ 9500 iter
+	 # ssim: 0.6345	Best: 0.6345 @ 9500 iter
+
+2025-05-02 19:45:33,594 INFO: [train..][epoch: 23, iter:   9,600, lr:(1.250e-05,)] [eta: 0:11:54, time (data): 0.984 (0.005)] l_pix: 5.0115e-02 
+2025-05-02 19:47:13,187 INFO: [train..][epoch: 24, iter:   9,700, lr:(1.250e-05,)] [eta: 0:08:52, time (data): 0.985 (0.005)] l_pix: 6.1690e-02 
+2025-05-02 19:48:51,799 INFO: [train..][epoch: 24, iter:   9,800, lr:(1.250e-05,)] [eta: 0:05:52, time (data): 0.986 (0.005)] l_pix: 4.3726e-02 
+2025-05-02 19:50:30,336 INFO: [train..][epoch: 24, iter:   9,900, lr:(1.250e-05,)] [eta: 0:02:54, time (data): 0.988 (0.005)] l_pix: 1.9049e-02 
+2025-05-02 19:52:09,203 INFO: [train..][epoch: 24, iter:  10,000, lr:(1.250e-05,)] [eta: -1 day, 23:59:59, time (data): 0.989 (0.005)] l_pix: 3.8555e-02 
+2025-05-02 19:52:09,203 INFO: Saving models and training states.
+2025-05-02 19:58:51,687 INFO: Validation FloodNet-Val
+	 # psnr: 28.5886	Best: 28.5886 @ 10000 iter
+	 # ssim: 0.6349	Best: 0.6349 @ 10000 iter
+
+2025-05-02 19:58:52,559 INFO: End of training. Time consumed: 4:59:48
+2025-05-02 19:58:52,560 INFO: Save the latest model.
+2025-05-02 20:05:54,290 INFO: Validation FloodNet-Val
+	 # psnr: 28.5886	Best: 28.5886 @ 10001 iter
+	 # ssim: 0.6349	Best: 0.6349 @ 10001 iter
+
