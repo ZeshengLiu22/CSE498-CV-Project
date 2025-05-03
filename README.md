@@ -97,15 +97,19 @@ You can find image visualizations and test log file under "results"
 Adjust "datasets.py" for your dataset path.
 Then run
 ```
-python esrgan.py --dataset_name <dataset-name> --batch_size <batch_size> --hr_height <hr_height> --hr_width <hr_width>
+python esrgan.py --dataset_name <dataset_name> --batch_size <batch_size> --hr_height <hr_height> --hr_width <hr_width>
 ```
-<dataset-name>: FloodNet or RescueNet
-<batch_size>: 4 if 128->512; 1 if 256->1024
-<hr_height> <hr_width>: 512 or 1024
+
+Args:
+dataset_name: FloodNet or RescueNet
+batch_size: 4 if 128->512; 1 if 256->1024
+hr_height/hr_width: 512 or 1024
 
 Adjust the "eval.py" for saved model path and dataset. Then run
 
 ## Expected results
+
+This is the result I get.
 
 Table: Image super-resolution results on FloodNet
 
