@@ -94,7 +94,43 @@ You can find image visualizations and test log file under "results"
 
 ### ESRGAN
 
+Adjust "datasets.py" for your dataset path.
+Then run
+```
+python esrgan.py --dataset_name <dataset-name> --batch_size <batch_size> --hr_height <hr_height> --hr_width <hr_width>
+```
+<dataset-name>: FloodNet or RescueNet
+<batch_size>: 4 if 128->512; 1 if 256->1024
+<hr_height> <hr_width>: 512 or 1024
 
-
+Adjust the "eval.py" for saved model path and dataset. Then run
 
 ## Expected results
+
+Table: Image super-resolution results on FloodNet
+
+| Dataset                 | Image Size   | Metrics | ESRGAN  | DRCT    | SwinFIR |
+| ----------------------- | ------------ | ------- | ------- | ------- | ------- |
+| **FloodNet-Validation** | **128→512**  | PSNR    | 20.3364 | 29.4241 | 29.4903 |
+|                         |              | SSIM    | 0.5801  | 0.6542  | 0.6562  |
+|                         | **256→1024** | PSNR    | 11.0390 | 28.5391 | 28.5886 |
+|                         |              | SSIM    | 0.1980  | 0.6333  | 0.6349  |
+| **FloodNet-Test**       | **128→512**  | PSNR    | 20.2959 | 29.3774 | 29.4191 |
+|                         |              | SSIM    | 0.5461  | 0.6421  | 0.6437  |
+|                         | **256→1024** | PSNR    | 11.2342 | 28.7146 | 28.7588 |
+|                         |              | SSIM    | 0.2059  | 0.6367  | 0.6383  |
+
+Table: Image super-resolution results on RescueNet
+
+| Dataset               | Image Size   | Metrics | ESRGAN  | DRCT    | SwinFIR |
+| --------------------- | ------------ | ------- | ------- | ------- | ------- |
+| **Rescue-Validation** | **128→512**  | PSNR    | 14.3396 | 28.1367 | 28.2643 |
+|                       |              | SSIM    | 0.4607  | 0.7328  | 0.7373  |
+|                       | **256→1024** | PSNR    | 5.0902  | 27.8947 | 28.0207 |
+|                       |              | SSIM    | 0.0165  | 0.7281  | 0.7336  |
+| **Rescue-Test**       | **128→512**  | PSNR    | 14.0631 | 28.1793 | 28.2856 |
+|                       |              | SSIM    | 0.4434  | 0.7281  | 0.7324  |
+|                       | **256→1024** | PSNR    | 4.9545  | 27.4051 | 27.5448 |
+|                       |              | SSIM    | 0.0170  | 0.7201  | 0.7264  |
+
+

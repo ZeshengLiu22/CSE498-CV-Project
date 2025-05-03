@@ -1,4 +1,4 @@
-2025-05-02 04:01:03,771 INFO: 
+2025-05-02 23:59:28,440 INFO: 
                 ____                _       _____  ____
                / __ ) ____ _ _____ (_)_____/ ___/ / __ \
               / __  |/ __ `// ___// // ___/\__ \ / /_/ /
@@ -14,8 +14,8 @@ Version Information:
 	BasicSR: 1.3.4.9
 	PyTorch: 1.12.1
 	TorchVision: 0.13.1
-2025-05-02 04:01:03,771 INFO: 
-  name: DRCT_SRx4
+2025-05-02 23:59:28,440 INFO: 
+  name: DRCT_SRx4_Floodnet_1024
   model_type: DRCTModel
   scale: 4
   num_gpu: 1
@@ -24,8 +24,8 @@ Version Information:
     test_1:[
       name: FloodNet-Test
       type: PairedImageDataset
-      dataroot_gt: datasets/uploads/New_LR_dataset_512_test/FloodNet/HR/train-org-img
-      dataroot_lq: datasets/uploads/New_LR_dataset_512_test/FloodNet/LR/train-org-img
+      dataroot_gt: datasets/uploads/New_LR_dataset_1024_test/FloodNet/HR/train-org-img
+      dataroot_lq: datasets/uploads/New_LR_dataset_1024_test/FloodNet/LR/train-org-img
       io_backend:[
         type: disk
       ]
@@ -37,7 +37,7 @@ Version Information:
     type: DRCT
     upscale: 4
     in_chans: 3
-    img_size: 128
+    img_size: 256
     window_size: 16
     compress_ratio: 3
     squeeze_factor: 30
@@ -52,12 +52,12 @@ Version Information:
     resi_connection: 1conv
   ]
   path:[
-    pretrain_network_g: experiments/train_DRCT_SRx4_Floodnet/models/net_g_latest.pth
+    pretrain_network_g: experiments/train_DRCT_SRx4_Floodnet_1024/models/net_g_latest.pth
     strict_load_g: True
     param_key_g: params_ema
-    results_root: /teamspace/studios/this_studio/CSE498-CV-Project/DRCT/results/DRCT_SRx4
-    log: /teamspace/studios/this_studio/CSE498-CV-Project/DRCT/results/DRCT_SRx4
-    visualization: /teamspace/studios/this_studio/CSE498-CV-Project/DRCT/results/DRCT_SRx4/visualization
+    results_root: /teamspace/studios/this_studio/CSE498-CV-Project/DRCT/results/DRCT_SRx4_Floodnet_1024
+    log: /teamspace/studios/this_studio/CSE498-CV-Project/DRCT/results/DRCT_SRx4_Floodnet_1024
+    visualization: /teamspace/studios/this_studio/CSE498-CV-Project/DRCT/results/DRCT_SRx4_Floodnet_1024/visualization
   ]
   val:[
     save_img: True
@@ -81,11 +81,11 @@ Version Information:
   auto_resume: False
   is_train: False
 
-2025-05-02 04:01:03,999 INFO: Dataset [PairedImageDataset] - FloodNet-Test is built.
-2025-05-02 04:01:04,000 INFO: Number of test images in FloodNet-Test: 400
-2025-05-02 04:01:04,299 INFO: Network [DRCT] is created.
-2025-05-02 04:01:05,701 INFO: Network: DRCT, with parameters: 14,139,579
-2025-05-02 04:01:05,702 INFO: DRCT(
+2025-05-02 23:59:28,659 INFO: Dataset [PairedImageDataset] - FloodNet-Test is built.
+2025-05-02 23:59:28,659 INFO: Number of test images in FloodNet-Test: 400
+2025-05-02 23:59:29,246 INFO: Network [DRCT] is created.
+2025-05-02 23:59:30,798 INFO: Network: DRCT, with parameters: 14,139,579
+2025-05-02 23:59:30,798 INFO: DRCT(
   (conv_first): Conv2d(3, 180, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
   (patch_embed): PatchEmbed(
     (norm): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
@@ -95,7 +95,7 @@ Version Information:
   (layers): ModuleList(
     (0): RDG(
       (swin1): SwinTransformerBlock(
-        dim=180, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+        dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=180, window_size=(16, 16), num_heads=6
@@ -116,7 +116,7 @@ Version Information:
       )
       (adjust1): Conv2d(180, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin2): SwinTransformerBlock(
-        dim=212, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
+        dim=212, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
         (norm1): LayerNorm((212,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=212, window_size=(16, 16), num_heads=4
@@ -137,7 +137,7 @@ Version Information:
       )
       (adjust2): Conv2d(212, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin3): SwinTransformerBlock(
-        dim=244, input_resolution=(128, 128), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
+        dim=244, input_resolution=(256, 256), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((244,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=244, window_size=(16, 16), num_heads=2
@@ -158,7 +158,7 @@ Version Information:
       )
       (adjust3): Conv2d(244, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin4): SwinTransformerBlock(
-        dim=276, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
+        dim=276, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
         (norm1): LayerNorm((276,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=276, window_size=(16, 16), num_heads=6
@@ -179,7 +179,7 @@ Version Information:
       )
       (adjust4): Conv2d(276, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin5): SwinTransformerBlock(
-        dim=308, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
+        dim=308, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
         (norm1): LayerNorm((308,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=308, window_size=(16, 16), num_heads=4
@@ -205,7 +205,7 @@ Version Information:
     )
     (1): RDG(
       (swin1): SwinTransformerBlock(
-        dim=180, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+        dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=180, window_size=(16, 16), num_heads=6
@@ -226,7 +226,7 @@ Version Information:
       )
       (adjust1): Conv2d(180, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin2): SwinTransformerBlock(
-        dim=212, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
+        dim=212, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
         (norm1): LayerNorm((212,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=212, window_size=(16, 16), num_heads=4
@@ -247,7 +247,7 @@ Version Information:
       )
       (adjust2): Conv2d(212, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin3): SwinTransformerBlock(
-        dim=244, input_resolution=(128, 128), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
+        dim=244, input_resolution=(256, 256), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((244,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=244, window_size=(16, 16), num_heads=2
@@ -268,7 +268,7 @@ Version Information:
       )
       (adjust3): Conv2d(244, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin4): SwinTransformerBlock(
-        dim=276, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
+        dim=276, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
         (norm1): LayerNorm((276,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=276, window_size=(16, 16), num_heads=6
@@ -289,7 +289,7 @@ Version Information:
       )
       (adjust4): Conv2d(276, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin5): SwinTransformerBlock(
-        dim=308, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
+        dim=308, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
         (norm1): LayerNorm((308,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=308, window_size=(16, 16), num_heads=4
@@ -315,7 +315,7 @@ Version Information:
     )
     (2): RDG(
       (swin1): SwinTransformerBlock(
-        dim=180, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+        dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=180, window_size=(16, 16), num_heads=6
@@ -336,7 +336,7 @@ Version Information:
       )
       (adjust1): Conv2d(180, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin2): SwinTransformerBlock(
-        dim=212, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
+        dim=212, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
         (norm1): LayerNorm((212,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=212, window_size=(16, 16), num_heads=4
@@ -357,7 +357,7 @@ Version Information:
       )
       (adjust2): Conv2d(212, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin3): SwinTransformerBlock(
-        dim=244, input_resolution=(128, 128), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
+        dim=244, input_resolution=(256, 256), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((244,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=244, window_size=(16, 16), num_heads=2
@@ -378,7 +378,7 @@ Version Information:
       )
       (adjust3): Conv2d(244, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin4): SwinTransformerBlock(
-        dim=276, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
+        dim=276, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
         (norm1): LayerNorm((276,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=276, window_size=(16, 16), num_heads=6
@@ -399,7 +399,7 @@ Version Information:
       )
       (adjust4): Conv2d(276, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin5): SwinTransformerBlock(
-        dim=308, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
+        dim=308, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
         (norm1): LayerNorm((308,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=308, window_size=(16, 16), num_heads=4
@@ -425,7 +425,7 @@ Version Information:
     )
     (3): RDG(
       (swin1): SwinTransformerBlock(
-        dim=180, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+        dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=180, window_size=(16, 16), num_heads=6
@@ -446,7 +446,7 @@ Version Information:
       )
       (adjust1): Conv2d(180, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin2): SwinTransformerBlock(
-        dim=212, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
+        dim=212, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
         (norm1): LayerNorm((212,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=212, window_size=(16, 16), num_heads=4
@@ -467,7 +467,7 @@ Version Information:
       )
       (adjust2): Conv2d(212, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin3): SwinTransformerBlock(
-        dim=244, input_resolution=(128, 128), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
+        dim=244, input_resolution=(256, 256), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((244,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=244, window_size=(16, 16), num_heads=2
@@ -488,7 +488,7 @@ Version Information:
       )
       (adjust3): Conv2d(244, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin4): SwinTransformerBlock(
-        dim=276, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
+        dim=276, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
         (norm1): LayerNorm((276,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=276, window_size=(16, 16), num_heads=6
@@ -509,7 +509,7 @@ Version Information:
       )
       (adjust4): Conv2d(276, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin5): SwinTransformerBlock(
-        dim=308, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
+        dim=308, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
         (norm1): LayerNorm((308,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=308, window_size=(16, 16), num_heads=4
@@ -535,7 +535,7 @@ Version Information:
     )
     (4): RDG(
       (swin1): SwinTransformerBlock(
-        dim=180, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+        dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=180, window_size=(16, 16), num_heads=6
@@ -556,7 +556,7 @@ Version Information:
       )
       (adjust1): Conv2d(180, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin2): SwinTransformerBlock(
-        dim=212, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
+        dim=212, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
         (norm1): LayerNorm((212,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=212, window_size=(16, 16), num_heads=4
@@ -577,7 +577,7 @@ Version Information:
       )
       (adjust2): Conv2d(212, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin3): SwinTransformerBlock(
-        dim=244, input_resolution=(128, 128), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
+        dim=244, input_resolution=(256, 256), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((244,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=244, window_size=(16, 16), num_heads=2
@@ -598,7 +598,7 @@ Version Information:
       )
       (adjust3): Conv2d(244, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin4): SwinTransformerBlock(
-        dim=276, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
+        dim=276, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
         (norm1): LayerNorm((276,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=276, window_size=(16, 16), num_heads=6
@@ -619,7 +619,7 @@ Version Information:
       )
       (adjust4): Conv2d(276, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin5): SwinTransformerBlock(
-        dim=308, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
+        dim=308, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
         (norm1): LayerNorm((308,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=308, window_size=(16, 16), num_heads=4
@@ -645,7 +645,7 @@ Version Information:
     )
     (5): RDG(
       (swin1): SwinTransformerBlock(
-        dim=180, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
+        dim=180, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((180,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=180, window_size=(16, 16), num_heads=6
@@ -666,7 +666,7 @@ Version Information:
       )
       (adjust1): Conv2d(180, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin2): SwinTransformerBlock(
-        dim=212, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
+        dim=212, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=8, mlp_ratio=2
         (norm1): LayerNorm((212,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=212, window_size=(16, 16), num_heads=4
@@ -687,7 +687,7 @@ Version Information:
       )
       (adjust2): Conv2d(212, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin3): SwinTransformerBlock(
-        dim=244, input_resolution=(128, 128), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
+        dim=244, input_resolution=(256, 256), num_heads=2, window_size=16, shift_size=0, mlp_ratio=2
         (norm1): LayerNorm((244,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=244, window_size=(16, 16), num_heads=2
@@ -708,7 +708,7 @@ Version Information:
       )
       (adjust3): Conv2d(244, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin4): SwinTransformerBlock(
-        dim=276, input_resolution=(128, 128), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
+        dim=276, input_resolution=(256, 256), num_heads=6, window_size=16, shift_size=8, mlp_ratio=1
         (norm1): LayerNorm((276,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=276, window_size=(16, 16), num_heads=6
@@ -729,7 +729,7 @@ Version Information:
       )
       (adjust4): Conv2d(276, 32, kernel_size=(1, 1), stride=(1, 1))
       (swin5): SwinTransformerBlock(
-        dim=308, input_resolution=(128, 128), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
+        dim=308, input_resolution=(256, 256), num_heads=4, window_size=16, shift_size=0, mlp_ratio=1
         (norm1): LayerNorm((308,), eps=1e-05, elementwise_affine=True)
         (attn): WindowAttention(
           dim=308, window_size=(16, 16), num_heads=4
@@ -768,10 +768,10 @@ Version Information:
   )
   (conv_last): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
 )
-2025-05-02 04:01:05,931 INFO: Loading DRCT model from experiments/train_DRCT_SRx4_Floodnet/models/net_g_latest.pth, with param key: [params_ema].
-2025-05-02 04:01:06,048 INFO: Model [DRCTModel] is created.
-2025-05-02 04:01:06,048 INFO: Testing FloodNet-Test...
-2025-05-02 04:02:54,510 INFO: Validation FloodNet-Test
-	 # psnr: 29.3774	Best: 29.3774 @ DRCT_SRx4 iter
-	 # ssim: 0.6421	Best: 0.6421 @ DRCT_SRx4 iter
+2025-05-02 23:59:31,657 INFO: Loading DRCT model from experiments/train_DRCT_SRx4_Floodnet_1024/models/net_g_latest.pth, with param key: [params_ema].
+2025-05-02 23:59:31,952 INFO: Model [DRCTModel] is created.
+2025-05-02 23:59:31,952 INFO: Testing FloodNet-Test...
+2025-05-03 00:04:47,730 INFO: Validation FloodNet-Test
+	 # psnr: 28.7146	Best: 28.7146 @ DRCT_SRx4_Floodnet_1024 iter
+	 # ssim: 0.6367	Best: 0.6367 @ DRCT_SRx4_Floodnet_1024 iter
 

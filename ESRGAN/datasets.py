@@ -27,14 +27,14 @@ class ImageDataset(Dataset):
         self.phase = phase  # train/val/test
         self.dataset_name = dataset_name  # FloodNet/RescueNet
         if phase == "train":
-            self.lr_root = os.path.join("datasets/uploads/New_LR_dataset_1024_train", dataset_name, "LR/train-org-img")
-            self.sr_root = os.path.join("datasets/uploads/New_LR_dataset_1024_train", dataset_name, "HR/train-org-img")
+            self.lr_root = os.path.join("datasets/uploads/New_LR_dataset_512_train", dataset_name, "LR/train-org-img")
+            self.sr_root = os.path.join("datasets/uploads/New_LR_dataset_512_train", dataset_name, "HR/train-org-img")
         elif phase == "val":
-            self.lr_root = os.path.join("datasets/uploads/New_LR_dataset_1024_val", dataset_name, "LR/train-org-img")
-            self.sr_root = os.path.join("datasets/uploads/New_LR_dataset_1024_val", dataset_name, "HR/train-org-img")
+            self.lr_root = os.path.join("datasets/uploads/New_LR_dataset_512_val", dataset_name, "LR/train-org-img")
+            self.sr_root = os.path.join("datasets/uploads/New_LR_dataset_512_val", dataset_name, "HR/train-org-img")
         elif phase == "test":
-            self.lr_root = os.path.join("datasets/uploads/New_LR_dataset_1024_test", dataset_name, "LR/train-org-img")
-            self.sr_root = os.path.join("datasets/uploads/New_LR_dataset_1024_test", dataset_name, "HR/train-org-img")
+            self.lr_root = os.path.join("datasets/uploads/New_LR_dataset_512_test", dataset_name, "LR/train-org-img")
+            self.sr_root = os.path.join("datasets/uploads/New_LR_dataset_512_test", dataset_name, "HR/train-org-img")
 
         if not os.path.exists(self.lr_root):
             raise ValueError(f"Low resolution image directory {self.lr_root} does not exist.")
